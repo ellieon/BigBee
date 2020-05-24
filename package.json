@@ -1,0 +1,14 @@
+{
+    "name": "big-dick-bee",
+    "version": "1.0.0",
+    "description": "Everybody knows it's big dick bee!",
+    "main": "main.js",
+    "author": "Ellie Harrison",
+    "dependencies": {
+        "discord.io": "^2.5.3",
+        "discord.js": "^12.2.0",
+        "express": "^4.17.1",
+        "spotify-web-api-node": "^4.0.0",
+        "winston": "^3.2.1"
+    }
+}
