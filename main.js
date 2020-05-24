@@ -55,14 +55,12 @@ function isOnDebugChannel(message) {
 }
 
 function notOnDebug(message) {
-    logger.info(debug)
-    logger.info(debugChannel)
-    logger.info(message.channel.name)
-    return !debug && message.channel.name !== debugChannel
+    return debug === false && message.channel.name !== debugChannel
 }
 
 bot.on('message', message => {
     if ( notOnDebug(message) ) { //These are commands that only run in production mode
+        logger.info('Production command')
         if (message.content.toLowerCase().includes('big dick bee')) {
             message.channel.send('BIG');
             message.channel.send('DICK');
