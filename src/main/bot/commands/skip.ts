@@ -33,6 +33,7 @@ export class Skip extends Command {
         const code = await this.db.getCurrentSpotifyKey().catch(handleError);
         this.spotifyApi.setAccessToken(code);
         await this.spotifyApi.skipToNext().catch(handleError);
+        await this.sleep(1000)
         this.spotifyApi.getMyCurrentPlaybackState()
             .then((data) => {
                 message.channel.send(
