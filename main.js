@@ -37,13 +37,15 @@ bot.on('ready', function (evt) {
 
 bot.on('message', message => {
     logger.info(message.channel.name)
+
+    if(message.content.toLowerCase().includes('big dick bee')) {
+      message.channel.send('BIG');
+      message.channel.send('DICK');
+      message.channel.send('BEE');
+    }
+
     if(message && message.channel.name === 'gods-domain'){
-    
-      if(message.content.toLowerCase().includes('big dick bee')) {
-        message.channel.send('BIG');
-        message.channel.send('DICK');
-        message.channel.send('BEE');
-      }
+
 
       if(message.content.startsWith('bee!')) {
         switch(message.content.toLowerCase().substring(4,message.content.length)) {
