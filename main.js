@@ -53,6 +53,9 @@ function isOnDebugChannel(message) {
 }
 
 function notOnDebug(message) {
+    logger.info(debug)
+    logger.info(debugChannel)
+    logger.info(message.channel.name)
     return !debug && message.channel.name !== debugChannel
 }
 
