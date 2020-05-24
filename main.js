@@ -75,7 +75,11 @@ function skipSongAndOutput(message) {
 
 app.get('/', (req, res) => res.send("There is something running here I promise :)"));
 app.get('/login', (req, res) => res.redirect(authoriseURL))
-app.get('/logout', (req, res) => spotifyApi.setAccessToken(undefined).then(() => SpotifyWebApi.setRefreshToken(undefined).then(res.send("Logged out"))))
+app.get('/logout', (req, res) => {
+  spotifyApi.resetAccessToken();
+  spotifyApi.resetRefreshToken();
+  res.send("Spotify disconnect successful");
+})
 app.get('/callback', (req, res) => {
     spotifyApi.authorizationCodeGrant(req.query.code).then(
         function(data) {
