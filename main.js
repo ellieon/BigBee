@@ -44,16 +44,18 @@ bot.on('message', message => {
       message.channel.send('BEE');
     }
 
+    if(message.content.startsWith('bee!')) {
+      switch(message.content.toLowerCase().substring(4,message.content.length)) {
+        case "skip":
+          skipSongAndOutput(message)
+          break
+      }
+    }
+    
     if(message && message.channel.name === 'gods-domain'){
 
 
-      if(message.content.startsWith('bee!')) {
-        switch(message.content.toLowerCase().substring(4,message.content.length)) {
-          case "skip":
-            skipSongAndOutput(message)
-            break
-        }
-      }
+      
     }
 });
 bot.login(process.env.BEE_DISCORD_BOT_TOKEN);
