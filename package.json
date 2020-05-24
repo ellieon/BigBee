@@ -17,7 +17,7 @@
         "winston": "^3.2.1"
     },
     "scripts": {
-        "start": "node build/index.js",
+        "start": "node build/main.js",
         "build": "tsc",
         "postinstall": "npm run build",
         "start-dev": "ts-node src/main/main.ts"
