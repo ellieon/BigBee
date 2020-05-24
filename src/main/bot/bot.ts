@@ -39,6 +39,7 @@ export class BeeBot {
     addCommands(): void {
         this.addCommand(new Commands.Echo())
         this.addCommand(new Commands.Skip())
+        this.addCommand(new Commands.PlaySong())
     }
 
     addCommand(command: Commands.Command): void {
