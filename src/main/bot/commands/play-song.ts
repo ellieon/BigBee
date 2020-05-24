@@ -58,8 +58,10 @@ export class PlaySong extends Command {
         const artist = data.body.tracks.items[0].artists[0].name
        // const context = data.body.tracks.items[0].album.uri
        // const offset = data.body.tracks.items[0].track_number - 1
-        await message.channel.send(`Playing the song ${name} by ${artist}`).catch(handleError)
-        this.addSongToQueue(data.body.tracks.items[0].uri, code).catch(handleError)
+
+        this.addSongToQueue(data.body.tracks.items[0].uri, code, message).catch(handleError)
+        await message.channel.send(`Adding the song ${name} by ${artist} to the current user's play queue`)
+            .catch(handleError)
         // await this.spotifyApi.play({
         //     'context_uri': context,
         //     'offset': {
@@ -72,7 +74,7 @@ export class PlaySong extends Command {
 
 
     //TODO This is fucking horrible code, and I need to sort it out once the web client has support for queueing
-    async addSongToQueue(trackUri: string, token: void | string) {
+    async addSongToQueue(trackUri: string, token: void | string, message: DiscordClient.Message) {
         const options = {
             url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
             headers: {
@@ -85,8 +87,13 @@ export class PlaySong extends Command {
         request.post(
           options,
             function (error, response, body) {
-                if (!error && response.statusCode == 200) {
+                if (!error && response.statusCode === 200) {
                     console.log(body);
+                }
+
+                if(error) {
+                    message.channel
+                        .send('I could not play the song (Maybe I don\'t have Spotify permission)').catch(handleError)
                 }
             }
         );
