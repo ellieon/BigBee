@@ -15,10 +15,6 @@ const spotifyApi = new SpotifyWebApi({
 const database: DatabaseHelper = new DatabaseHelper();
 const spotifyAuthUrl = spotifyApi.createAuthorizeURL(scopes, "some-state");
 
-function errLogger(err) {
-    console.log('Something went wrong!', err)
-}
-
 export default express.Router()
     .get('/spotify-login', (req, res) => {
         res.redirect(spotifyAuthUrl)

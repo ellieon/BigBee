@@ -2,7 +2,7 @@
     "name": "big-dick-bee",
     "version": "1.0.0",
     "description": "Everybody knows it's big dick bee!",
-    "main": "main.ts",
+    "main": "src/main/main.ts",
     "author": "Ellie Harrison",
     "dependencies": {
         "@typeit/discord": "^4.0.7",
@@ -17,7 +17,8 @@
         "winston": "^3.2.1"
     },
     "scripts": {
-        "start": "ts-node main.ts"
+        "start-dev": "ts-node src/main/main.ts",
+        "start": "tsc && node build/main.js"
     },
     "devDependencies": {
         "@types/express": "github:types/express",

@@ -2,9 +2,6 @@ import * as express from "express/lib/express";
 import hello from "./routes/hello";
 import spotify from "./routes/spotify";
 import discord from "./routes/discord";
-import {EnvironmentHelper as env} from "../common/environmentHelper";
-
-const SpotifyWebApi = require('spotify-web-api-node')
 
 export class WebService {
 

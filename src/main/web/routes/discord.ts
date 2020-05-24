@@ -1,5 +1,5 @@
 import * as express from 'express'
-import {EnvironmentHelper as env} from "../../common/environmentHelper";
+import {EnvironmentHelper as env} from "./../../common/environmentHelper";
 const DiscordOauth2 = require('discord-oauth2')
 
 const oauth = new DiscordOauth2({
@@ -12,10 +12,6 @@ const discordAuthUrl = oauth.generateAuthUrl({
     scope: ["identify"],
     state: "some-state"
 });
-
-function errLogger(err) {
-    console.log('Something went wrong!', err)
-}
 
 export default express.Router()
     .get('/login', (req, res) => {

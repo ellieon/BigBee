@@ -1,5 +1,5 @@
 import {Client as DiscordClient} from "@typeit/discord";
-import {EnvironmentHelper as env} from "./../common/environmentHelper";
+import {EnvironmentHelper as env} from "../common/environmentHelper";
 import {DatabaseHelper} from "../common/database";
 
 const SpotifyWebApi = require('spotify-web-api-node')
