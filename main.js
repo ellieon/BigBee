@@ -51,9 +51,9 @@ bot.on('message', message => {
           break
       }
     }
-    
-    if(message && message.channel.name === 'gods-domain'){
 
+    if(message && message.channel.name === 'gods-domain'){
+      //these are debug commands
 
       
     }
@@ -75,6 +75,7 @@ function skipSongAndOutput(message) {
 
 app.get('/', (req, res) => res.send("There is something running here I promise :)"));
 app.get('/login', (req, res) => res.redirect(authoriseURL))
+app.get('/logout', (req, res) => spotifyApi.setAccessToken(undefined).then(() => SpotifyWebApi.setRefreshToken(undefined).then(res.send("Logged out"))))
 app.get('/callback', (req, res) => {
     spotifyApi.authorizationCodeGrant(req.query.code).then(
         function(data) {
