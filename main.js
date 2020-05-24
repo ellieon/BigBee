@@ -10,7 +10,7 @@ const oauth = new DiscordOauth2({
     redirectUri: `${process.env.BEE_URL}/discord-callback`
 })
 
-const debug = process.env.BEE_DEBUG || false
+const env = process.env.BEE_ENV || 'debug'
 const debugChannel = process.env.BEE_DEBUG_CHANNEL
 const port = process.env.PORT || 3000
 
@@ -45,17 +45,17 @@ logger.level = 'debug';
 const bot = new Discord.Client();
 bot.on('ready', function (evt) {
     logger.info('Connected');
-    logger.info(`Debug mode = ${debug}`)
+    logger.info(`Environment = ${env}`)
     logger.info(`Debug channel = ${debugChannel}`)
 });
 
 
 function isOnDebugChannel(message) {
-    return debug && message.channel.name === debugChannel
+    return env === 'debug' && message.channel.name === debugChannel
 }
 
 function notOnDebug(message) {
-    return debug === false && message.channel.name !== debugChannel
+    return env !== 'debug' && message.channel.name !== debugChannel
 }
 
 bot.on('message', message => {
@@ -75,7 +75,6 @@ bot.on('message', message => {
             }
         }
     } else if (isOnDebugChannel(message)) {
-
     }
 
 });
