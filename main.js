@@ -4,7 +4,7 @@ var SpotifyWebApi = require('spotify-web-api-node')
 const express = require('express')
 const app = express()
 
-const port = process.env.BEE_PORT
+const port = process.env.PORT || 3000
 
 const scopes =
 ['user-read-private',
@@ -93,5 +93,5 @@ app.get('/callback', (req, res) => {
       )
 })
 
-app.listen(port)
+app.listen(port, () => console.log(`Server is listening on port ${port}`))
 
