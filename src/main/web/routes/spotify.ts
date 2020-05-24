@@ -30,7 +30,7 @@ export default express.Router()
             .then(database.setCurrentSpotifyKey.bind(database))
             .then(spotifyApi.getMyCurrentPlaybackState.bind(spotifyApi))
             .then((data) => {
-                 res.send("Success: " + data.body.item.name + ' ' + data.body.item.artists[0].name);
+                 res.send("Success");
              })
     }).get('/logout', (req, res) => {
         spotifyApi.resetAccessToken();

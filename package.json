@@ -5,6 +5,8 @@
     "author": "Ellie Harrison",
     "dependencies": {
         "@types/node": "^14.0.5",
+        "db-migrate": "^0.11.11",
+        "db-migrate-pg": "^1.2.2",
         "discord-oauth2": "^2.2.0",
         "discord.js": "^12.2.0",
         "express": "^4.17.1",
@@ -16,10 +18,10 @@
         "winston": "^3.2.1"
     },
     "scripts": {
-        "start": "node build/main.js",
+        "start": "db-migrate up && node build/main.js",
         "build": "tsc",
         "postinstall": "npm run build",
-        "start-dev": "ts-node src/main/main.ts"
+        "start-dev": "db-migrate up && ts-node src/main/main.ts"
     },
     "devDependencies": {
         "tslint": "^6.1.2"
