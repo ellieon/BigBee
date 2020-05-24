@@ -45,6 +45,8 @@ logger.level = 'debug';
 const bot = new Discord.Client();
 bot.on('ready', function (evt) {
     logger.info('Connected');
+    logger.info(`Debug mode = ${debug}`)
+    logger.info(`Debug channel = ${debugChannel}`)
 });
 
 
