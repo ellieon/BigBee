@@ -4,7 +4,6 @@
     "description": "Everybody knows it's big dick bee!",
     "author": "Ellie Harrison",
     "dependencies": {
-        "@typeit/discord": "^4.0.7",
         "@types/node": "^14.0.5",
         "discord-oauth2": "^2.2.0",
         "discord.js": "^12.2.0",

@@ -1,4 +1,4 @@
-import {Client as DiscordClient} from "@typeit/discord";
+import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper as env} from "../common/environmentHelper";
 import {DatabaseHelper} from "../common/database";
 
@@ -6,7 +6,7 @@ const SpotifyWebApi = require('spotify-web-api-node')
 const logger = require('winston');
 
 export class BeeBot {
-    readonly bot = new DiscordClient()
+    readonly bot = new DiscordClient.Client()
     readonly spotifyApi
     readonly db: DatabaseHelper = new DatabaseHelper()
 
