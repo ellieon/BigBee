@@ -53,7 +53,7 @@ function isOnDebugChannel(message) {
 }
 
 function notOnDebug(message) {
-    return !debug && message.channel.name !== debug
+    return !debug && message.channel.name !== debugChannel
 }
 
 bot.on('message', message => {
