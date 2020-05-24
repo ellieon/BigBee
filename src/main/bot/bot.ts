@@ -1,28 +1,16 @@
 import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper as env} from "../common/environmentHelper";
-import {DatabaseHelper} from "../common/database";
 
-const SpotifyWebApi = require('spotify-web-api-node')
+import * as Commands from './commands/index'
+import {TextChannel} from "discord.js";
+
 const logger = require('winston');
 
 export class BeeBot {
     readonly bot = new DiscordClient.Client()
-    readonly spotifyApi
-    readonly db: DatabaseHelper = new DatabaseHelper()
+    private registeredCommands: Commands.Command[] = []
 
     constructor() {
-        this.spotifyApi = new SpotifyWebApi({
-            clientId: env.getSpotifyClientId(),
-            clientSecret: env.getSpotifyClientSecret()
-        });
-    }
-
-    isOnDebugChannel(message): boolean {
-        return env.isDevelopmentMode() && message.channel.name === env.getDebugChannelName()
-    }
-
-    notOnDebug(message): boolean {
-        return !env.isDevelopmentMode() && message.channel.name !== env.getDebugChannelName()
     }
 
     init() {
@@ -30,79 +18,53 @@ export class BeeBot {
         logger.add(new logger.transports.Console, {
             colorize: true
         });
-
         logger.level = 'debug';
 
         this.bot.on('ready', () => {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
             logger.info(`Debug channel = ${env.getDebugChannelName()}`)
+            this.bot.user.setPresence({activity: {name: "Everybody knows it's big dick bee! "}, status: 'online'})
         });
 
-        this.bot.on('message', message => {
-            if (this.notOnDebug(message)) { //These are commands that only run in production mode
-                logger.info('Production command')
-                if (message.content.toLowerCase().includes('big dick bee')) {
-                    message.channel.send('BIG');
-                    message.channel.send('DICK');
-                    message.channel.send('BEE');
-                }
-
-                if (message.content.startsWith('bee!')) {
-                    switch (message.content.toLowerCase().substring(4, message.content.length)) {
-                        case "skip":
-                            this.skipSongAndOutput(message)
-                            break
-                    }
-                }
-            } else if (this.isOnDebugChannel(message)) {
-                logger.info('Debug command')
-                if (message.content.toLowerCase().includes('big dick bee')) {
-                    message.channel.send('BIG');
-                    message.channel.send('DICK');
-                    message.channel.send('BEE');
-                }
-                if (message.content.startsWith('bee!')) {
-                    switch (message.content.toLowerCase().substring(4, message.content.length)) {
-                        case "skip":
-                            this.skipSongAndOutput(message)
-                            break
-                    }
-                }
-            }
+        this.bot.on('message', (message) => {
+            this.handleMessage(message)
         });
 
 
-        this.bot.login(env.getDiscordBotToken());
+        this.bot.login(env.getDiscordBotToken()).then(logger.info('Bot login successful'));
+        this.addCommands()
     }
 
-    skipSongAndOutput(message) {
-        this.db.getCurrentSpotifyKey()
-            .then((code) => {
-                this.spotifyApi.setAccessToken(code)
-            })
-            .then(() => {
-                this.spotifyApi.skipToNext()
-            })
-            .then(() => this.sleep(1000))
-            .then(() => {
-                return this.spotifyApi.getMyCurrentPlaybackState()
-            })
-            .then((data) => {
-                message.channel.send(
-                    `I have skipped the song, the now playing song is: ${data.body.item.name} by ${data.body.item.artists[0].name}`
-                )
-            }, function (err) {
-                message.channel.send(`I was unable to skip the song, I might not have an authorisation code for Spotify`)
-                console.log(err)
-            }
-        )
+    addCommands(): void {
+        this.addCommand(new Commands.Echo())
+        this.addCommand(new Commands.Skip())
     }
 
-    sleep(ms) {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
+    addCommand(command: Commands.Command): void {
+        logger.info(`Registered command ${command.getName()}`)
+        this.registeredCommands.push(command)
+    }
+
+    handleMessage(message: DiscordClient.Message): void {
+        if(this.isDebugMessage(message) || this.isProdMessage(message)) {
+            this.registeredCommands.forEach((c) => {
+                if (message.content.toLowerCase().startsWith(c.getTrigger())) {
+                    logger.info(`Executing command ${c.getName()}`)
+                    c.execute(message).then(() => logger.info(`Command executed ${c.getName()}`));
+                }
+            })
+        }
+    }
+
+    isProdMessage(message: DiscordClient.Message): boolean {
+        return (message.channel as TextChannel).name !== env.getDebugChannelName()
+            && !env.isDevelopmentMode()
+    }
+
+    isDebugMessage(message: DiscordClient.Message): boolean {
+        return (message.channel as TextChannel).name === env.getDebugChannelName()
+            && env.isDevelopmentMode()
     }
 
 }
