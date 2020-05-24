@@ -2,19 +2,22 @@
     "name": "big-dick-bee",
     "version": "1.0.0",
     "description": "Everybody knows it's big dick bee!",
-    "main": "main.js",
+    "main": "main.ts",
     "author": "Ellie Harrison",
     "dependencies": {
+        "@typeit/discord": "^4.0.7",
+        "@types/node": "^14.0.5",
         "discord-oauth2": "^2.2.0",
-        "discord.io": "^2.5.3",
         "discord.js": "^12.2.0",
         "express": "^4.17.1",
+        "pg": "^8.2.1",
         "spotify-web-api-node": "^4.0.0",
+        "ts-node": "^8.10.1",
         "typescript": "^3.9.3",
         "winston": "^3.2.1"
     },
     "scripts": {
-        "start": "node main.js"
+        "start": "ts-node main.ts"
     },
     "devDependencies": {
         "@types/express": "github:types/express",
