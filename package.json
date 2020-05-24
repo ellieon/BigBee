@@ -7,6 +7,7 @@
     "dependencies": {
         "@typeit/discord": "^4.0.7",
         "@types/node": "^14.0.5",
+        "@types/express": "github:types/express",
         "discord-oauth2": "^2.2.0",
         "discord.js": "^12.2.0",
         "express": "^4.17.1",
@@ -19,10 +20,9 @@
     },
     "scripts": {
         "start-dev": "ts-node src/main/main.ts",
-        "start": "tsc && node build/main.js"
+        "start": "tsc && node ./build/main.js"
     },
     "devDependencies": {
-        "@types/express": "github:types/express",
         "tslint": "^6.1.2"
     }
 }
