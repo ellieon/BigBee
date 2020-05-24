@@ -1,9 +1,9 @@
-#Everybody knows.....
+# Everybody knows.....
 It's Big Dick Bee, a Discord bot developed for Node.js with Typescript initially designed for Spotify control of a 
 connected user by other members of the Discord.
 
 
-##Requirements
+## Requirements
 You will need each of the following installed to be able to set up a development environmet for BDB:
 - Node.js
 - PostgreSQL server
@@ -13,7 +13,7 @@ so you can leverage the OAuth2 tokens:
 - Spotify
 - Discord
 
-##Environment Variables
+## Environment Variables
 The following environment variables must be set and accessible to BDB:
 - `BEE_DISCORD_CLIENT_ID` - Your Discord BDB application client ID
 - `BEE_DISCORD_CLIENT_SECRET` - Your Discord BDB application client secret
@@ -27,12 +27,12 @@ The following environment variables must be set and accessible to BDB:
     eg: `postgresql://big_dick_bee:big_dick_bee@localhost:5432/big_dick_bee`
 - `PORT` - (Defaults to 3000) The port for the frontend application to bind to
      
-##Startup
+## Startup
 Simply run `npm run start-dev` to run the applcation under `ts-node`
 
 To run a pre-transpiled version of the server just run `npm run start`
 
-##Database migration
+## Database migration
 BDB will automatically attempt to perform database migration to do initial setup of the database for application use.
 The migration scripts are run automatically as part of the above start up and are located in the `migrations` folder of 
 the project directory.
@@ -46,12 +46,12 @@ This will add a new script in the migrations folder,
 please see the documentation for db-migrate(https://www.npmjs.com/package/db-migrate)
 for how to manipulate the database in these scripts
 
-##Usage
+## Usage
 Once the server is up and running, A user can connect their Spotify account by visiting `<BASE_URL>/spotify-login`.
 This is currently a very rudamentary system that only supports one user for the time being.
 
 
-##TODO
+## TODO
 This bot is in very early stages of development, so the following features are planned:
 - Multiple user support by linking Discord and Spotify accounts together
 - Scheduling to refresh Spotify tokens before they expire
