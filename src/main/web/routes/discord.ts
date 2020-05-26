@@ -12,8 +12,9 @@ const oauth = new DiscordOauth2({
 export default express.Router()
     .get('/login', (req, res: express.Request) => {
         const discordAuthUrl = oauth.generateAuthUrl({
-            scope: ["identify"],
-            state: `${req.query.callback}`
+            scope: "identify",
+            state: `${req.query.callback}`,
+
         });
         res.redirect(`${discordAuthUrl}`)
     })
@@ -22,8 +23,10 @@ export default express.Router()
         try {
             const data = await oauth.tokenRequest({
                 code: req.query.code,
-                grantType: "authorization_code"
+                grantType: "authorization_code",
             })
+
+            console.log(data)
 
             const token: any = JwtHelper.createBearerToken(data.access_token)
             console.log(req.url)
