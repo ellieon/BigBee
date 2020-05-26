@@ -1,28 +1,20 @@
 import * as DiscordClient from 'discord.js'
 import {Command} from './command'
-import {EnvironmentHelper as env} from "../../common/environmentHelper";
 import {DatabaseHelper} from "../../common/database";
-import * as SpotifyWebApi from 'spotify-web-api-node'
+import {SpotifyHelper} from "../../common/spotifyHelper";
 
 const COMMAND_STRING = 'skip'
 const NAME = 'skip'
 const DESCRIPTION = 'Skips to the next song in spotify'
 const ENVIRONMENTS = [Command.DEBUG_ENV, Command.PROD_ENV]
 
-function handleError(err): void {
-    console.log(err)
-}
 
 export class Skip extends Command {
-    readonly spotifyApi
+    readonly helper: SpotifyHelper = new SpotifyHelper()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
         super(NAME, true, COMMAND_STRING, ENVIRONMENTS, COMMAND_STRING, DESCRIPTION)
-        this.spotifyApi = new SpotifyWebApi({
-            clientId: env.getSpotifyClientId(),
-            clientSecret: env.getSpotifyClientSecret()
-        });
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
@@ -30,11 +22,9 @@ export class Skip extends Command {
     }
 
     async skipSongAndOutput(message: DiscordClient.Message) {
-        const code = await this.db.getCurrentSpotifyKey().catch(handleError);
-        this.spotifyApi.setAccessToken(code);
-        await this.spotifyApi.skipToNext().catch(handleError);
+        await this.helper.skipTrack()
         await this.sleep(1000)
-        this.spotifyApi.getMyCurrentPlaybackState()
+        this.helper.getCurrentPlaybackState()
             .then((data) => {
                 message.channel.send(
                     `I have skipped the song, the now playing song is: ${data.body.item.name} by ${data.body.item.artists[0].name}`
