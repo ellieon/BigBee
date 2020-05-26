@@ -37,7 +37,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
-  return null;
+  db.dropTable('spotify_connections')
 };
 
 exports._meta = {
