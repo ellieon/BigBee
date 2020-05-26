@@ -18,8 +18,5 @@ export class Disconnect extends Command {
         await this.db.deleteUser(message.author.id)
             .catch(() => message.channel.send(`I was unable to disconnect ${message.guild.member(message.author).displayName}`))
             .then(()=>message.channel.send(`I have disconnected ${message.guild.member(message.author).displayName} from Spotify playback`).catch(console.log))
-
-
     }
-
 }
