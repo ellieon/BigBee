@@ -4,6 +4,8 @@ export abstract class Command {
     static readonly DEBUG_ENV = 'debug'
     static readonly PROD_ENV = 'prod'
 
+    private client: DiscordClient.Client;
+
     protected constructor(
         private name: string,
         private prefixRequired: boolean,
@@ -25,6 +27,14 @@ export abstract class Command {
         } else {
             return this.commandString
         }
+    }
+
+    public setClient(client: DiscordClient.Client) {
+        this.client = client
+    }
+
+    public getClient() {
+        return this.client
     }
 
     getName(): string {

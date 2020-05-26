@@ -38,7 +38,7 @@ export class PlaySong extends Command {
             return
         }
 
-        const code: SpotifyConnection = await this.db.getSpotifyKeyForUser()
+        const code: SpotifyConnection = await this.db.getSpotifyKeyForUser(message.author.id)
         this.spotifyApi.setAccessToken(code.connectionToken);
 
         const data = await this.spotifyApi.searchTracks(params, { limit: 1 }).catch(() => {

@@ -5,11 +5,13 @@
     "author": "Ellie Harrison",
     "dependencies": {
         "@types/node": "^14.0.5",
+        "cookie-parser": "^1.4.5",
         "db-migrate": "^0.11.11",
         "db-migrate-pg": "^1.2.2",
         "discord-oauth2": "^2.2.0",
         "discord.js": "^12.2.0",
         "express": "^4.17.1",
+        "jsonwebtoken": "^8.5.1",
         "pg": "^8.2.1",
         "request": "^2.88.2",
         "spotify-web-api-node": "^4.0.0",
@@ -19,7 +21,7 @@
         "winston": "^3.2.1"
     },
     "scripts": {
-        "start": "db-migrate up && node build/main.js",
+        "start": "db-migrate up && node build/main.js --trace-warnings",
         "build": "tsc",
         "postinstall": "npm run build",
         "start-dev": "db-migrate up && ts-node src/main/main.ts"

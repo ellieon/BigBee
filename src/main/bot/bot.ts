@@ -41,10 +41,12 @@ export class BeeBot {
         this.addCommand(new Commands.Skip())
         //this.addCommand(new Commands.PlaySong())
         this.addCommand(new Commands.QueueSong())
+        this.addCommand(new Commands.Disconnect())
     }
 
     addCommand(command: Commands.Command): void {
         logger.info(`Registered command ${command.getName()}`)
+        command.setClient(this.bot)
         this.registeredCommands.push(command)
     }
 
