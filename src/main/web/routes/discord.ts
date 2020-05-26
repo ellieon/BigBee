@@ -19,18 +19,23 @@ export default express.Router()
     })
     .get('/discord-callback', async (req, res) => {
         console.log(req.query.code)
-        const data = await oauth.tokenRequest({
-            code: req.query.code,
-            grantType: "authorization_code"
-        })
+        try {
+            const data = await oauth.tokenRequest({
+                code: req.query.code,
+                grantType: "authorization_code"
+            })
 
-        const token: any = JwtHelper.createBearerToken(data.access_token)
-        console.log(req.url)
-        console.log(token)
-        JwtHelper.saveBearerTokenToCookie(res, token)
-        console.log(req.query.state)
-        console.log(`Post login redirect to ` + req.query.state)
-        res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+            const token: any = JwtHelper.createBearerToken(data.access_token)
+            console.log(req.url)
+            console.log(token)
+            JwtHelper.saveBearerTokenToCookie(res, token)
+            console.log(req.query.state)
+            console.log(`Post login redirect to ` + req.query.state)
+            res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+        } catch(err) {
+            console.log(err)
+            res.send(err)
+        }
 
     })
 
