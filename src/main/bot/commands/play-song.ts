@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {Command} from './command'
 import {EnvironmentHelper as env} from "../../common/environmentHelper";
-import {DatabaseHelper} from "../../common/database";
+import {DatabaseHelper, SpotifyConnection} from "../../common/database";
 import * as SpotifyWebApi from 'spotify-web-api-node'
 
 const COMMAND_STRING = 'play'
@@ -38,8 +38,8 @@ export class PlaySong extends Command {
             return
         }
 
-        const code = await this.db.getCurrentSpotifyKey().catch(handleError);
-        this.spotifyApi.setAccessToken(code);
+        const code: SpotifyConnection = await this.db.getSpotifyKeyForUser()
+        this.spotifyApi.setAccessToken(code.connectionToken);
 
         const data = await this.spotifyApi.searchTracks(params, { limit: 1 }).catch(() => {
             message.channel.send('I was unable to connect to Spotify to search').catch(handleError)

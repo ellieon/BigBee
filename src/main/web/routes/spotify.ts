@@ -25,9 +25,14 @@ export default express.Router()
             .then(function (data) {
                     spotifyApi.setAccessToken(data.body['access_token']);
                     spotifyApi.setRefreshToken(data.body['refresh_token']);
-                    return data.body['access_token']
+                    return data.body
                 })
-            .then(database.setCurrentSpotifyKey.bind(database))
+            .then((data) => {
+                let refreshDate: Date = new Date()
+                refreshDate.setSeconds(refreshDate.getSeconds() + data.expires_in - 10)
+                console.log(data)
+                database.setCurrentSpotifyKey('1', data.access_token, data.refresh_token, refreshDate).catch(console.log)
+            })
             .then(spotifyApi.getMyCurrentPlaybackState.bind(spotifyApi))
             .then((data) => {
                  res.send("Success");
