@@ -25,10 +25,14 @@ export class Skip extends Command {
         try {
             const rows: any[] = await this.db.getAllUserIds()
 
+            if(rows.length === 0) {
+                message.channel.send('There are no connected Spotify users').catch(console.log)
+                return
+            }
             await Promise.all(rows.map(async (id) => {
                     this.helper.skipTrack(id.user_id).catch(async () => {
                         const member: DiscordClient.GuildMember = await message.guild.members.fetch(id.user_id)
-                        message.channel.send("I could not add song to the queue for: " + member.displayName)
+                        message.channel.send("I could not skip for " + member.displayName)
                             .catch(console.log)
                         }
                     )
