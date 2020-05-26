@@ -1,6 +1,6 @@
 import * as express from 'express'
 import {EnvironmentHelper as env} from "./../../common/environmentHelper";
-import {JwtHelper} from "../common/jwtHelper";
+//import {JwtHelper} from "../common/jwtHelper";
 const DiscordOauth2 = require('discord-oauth2')
 
 const oauth = new DiscordOauth2({
@@ -21,20 +21,28 @@ export default express.Router()
     .get('/discord-callback', async (req, res) => {
         console.log(req.query.code)
         try {
-            const data = await oauth.tokenRequest({
+            // const data = await oauth.tokenRequest({
+            //     code: req.query.code,
+            //     grantType: "authorization_code",
+            // })
+
+            console.log(req.query.code)
+            oauth.tokenRequest({
                 code: req.query.code,
-                grantType: "authorization_code",
+                grantType: "authorization_code"
             })
+                .then((data) => oauth.getUser(data.access_token))
+                .then((data) => res.send(`${data.id}:${data.username}#${data.discriminator}`))
 
-            console.log(data)
-
-            const token: any = JwtHelper.createBearerToken(data.access_token)
-            console.log(req.url)
-            console.log(token)
-            JwtHelper.saveBearerTokenToCookie(res, token)
-            console.log(req.query.state)
-            console.log(`Post login redirect to ` + req.query.state)
-            res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+            // console.log(data)
+            //
+            // const token: any = JwtHelper.createBearerToken(data.access_token)
+            // console.log(req.url)
+            // console.log(token)
+            // JwtHelper.saveBearerTokenToCookie(res, token)
+            // console.log(req.query.state)
+            // console.log(`Post login redirect to ` + req.query.state)
+            // res.redirect(`${env.getBaseURL()}/${req.query.state}`)
         } catch(err) {
             console.log(err)
             res.send(err)
