@@ -12,24 +12,27 @@ const oauth = new DiscordOauth2({
 export default express.Router()
     .get('/login', (req, res: express.Request) => {
         const discordAuthUrl = oauth.generateAuthUrl({
-            scope: ["identify"],
-            state: `${req.query.callback}`
+            scope: "identify",
+            state: `${req.query.callback}`,
+
         });
         res.redirect(`${discordAuthUrl}`)
     })
-    .get('/discord-callback', (req, res) => {
-        oauth.tokenRequest({
-            code: req.query.code,
-            grantType: "authorization_code"
-        })
-            .then((data) => {
-                const token: any = JwtHelper.createBearerToken(data.access_token)
-                console.log(req.url)
-                console.log(token)
-                JwtHelper.saveBearerTokenToCookie(res, token)
-                console.log(req.query.state)
-                console.log(`Post login redirect to ` + req.query.state)
-                res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+    .get('/discord-callback', async (req, res) => {
+        console.log(req.query.code)
+        try {
+            const data = await oauth.tokenRequest({
+                code: req.query.code,
+                grantType: "authorization_code",
             })
+
+            const token: any = JwtHelper.createBearerToken(data.access_token)
+            JwtHelper.saveBearerTokenToCookie(res, token)
+            res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+        } catch(err) {
+            console.log(err)
+            res.send(err)
+        }
+
     })
 

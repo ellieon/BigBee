@@ -35,32 +35,32 @@ export class QueueSong extends Command {
         const rows: any[] = await this.db.getAllUserIds()
         let name: string, artist: string, uri: string = undefined
 
+        if(rows.length === 0) {
+            message.channel.send("There are currently no registered spotify users")
+        }
+        for (let i = 0; i < rows.length; i++) {
+            const userId: string = rows[i].user_id
 
-        await Promise.all(rows.map(async (id) => {
-                const userId: string = id.user_id
-                if (!uri) {
-                    const data = (await this.helper.searchForTrack(params, userId)).body.tracks.items
+            if (!uri) {
+                const data = (await this.helper.searchForTrack(params, userId)).body.tracks.items
 
-                    if (data.length === 0) {
-                        throw("I was unable to find any tracks by the name" + params)
-                    }
-
-                    name = data[0].name;
-                    artist = data[0].artists[0].name
-                    uri = data[0].uri
-                    await message.channel.send(`Added the song \`${name} by ${artist}\` to all user's play queue`)
-                        .catch(handleError)
+                if (data.length === 0) {
+                    message.channel.send("I was unable to find any tracks by the name" + params).catch(console.log)
                 }
 
-                this.helper.queueSong(uri, userId).catch(async (err) => {
-                    const member: DiscordClient.GuildMember = await message.guild.members.fetch(userId)
-                    console.log(err)
-                    message.channel.send("I could not add song to the queue for: " + member.displayName)
-                        .catch(console.log)
-                })
+                name = data[0].name;
+                artist = data[0].artists[0].name
+                uri = data[0].uri
+                await message.channel.send(`Added the song \`${name} by ${artist}\` to all user's play queue`)
+                    .catch(handleError)
             }
-        )).catch((err) => message.channel.send(err).catch(console.log))
 
-
+            this.helper.queueSong(uri, userId).catch(async (err) => {
+                const member: DiscordClient.GuildMember = await message.guild.members.fetch(userId)
+                console.log(err)
+                message.channel.send("I could not add song to the queue for: " + member.displayName)
+                    .catch(console.log)
+            })
+        }
     }
 }
