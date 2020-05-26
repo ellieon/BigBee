@@ -45,6 +45,7 @@ export class BeeBot {
 
     addCommand(command: Commands.Command): void {
         logger.info(`Registered command ${command.getName()}`)
+        command.setClient(this.bot)
         this.registeredCommands.push(command)
     }
 

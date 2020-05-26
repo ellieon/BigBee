@@ -22,17 +22,26 @@ export class Skip extends Command {
     }
 
     async skipSongAndOutput(message: DiscordClient.Message) {
-        await this.helper.skipTrack()
-        await this.sleep(1000)
-        this.helper.getCurrentPlaybackState()
-            .then((data) => {
-                message.channel.send(
-                    `I have skipped the song, the now playing song is: ${data.body.item.name} by ${data.body.item.artists[0].name}`
-                )},
-                function (err) {
-                    message.channel.send(`I was unable to skip the song, I might not have an authorisation code for Spotify`)
-                    console.log(err)
-                })
+        try {
+            const rows: any[] = await this.db.getAllUserIds()
+
+            await Promise.all(rows.map(async (id) => {
+                    this.helper.skipTrack(id.user_id).catch(async () => {
+                        const member: DiscordClient.GuildMember = await message.guild.members.fetch(id.user_id)
+                        message.channel.send("I could not add song to the queue for: " + member.displayName)
+                            .catch(console.log)
+                        }
+                    )
+                }
+            ));
+
+            message.channel.send('Song has been skipped for all users').catch(console.log)
+
+        } catch (err) {
+            message.channel.send(`I was unable to skip the song, I might not have an authorisation code for Spotify`)
+                .then(console.log)
+            console.log(err)
+        }
     }
 
     sleep(ms) {
@@ -40,6 +49,5 @@ export class Skip extends Command {
             setTimeout(resolve, ms);
         });
     }
-
 
 }

@@ -18,43 +18,43 @@ export class SpotifyHelper {
         this.db = new DatabaseHelper()
     }
 
-    private async checkConnection(): Promise<void> {
-        this.spotifyConnection = await this.db.getSpotifyKeyForUser()
+    private async checkConnection(userId: string): Promise<void> {
+        this.spotifyConnection = await this.db.getSpotifyKeyForUser(userId)
         this.spotifyApi.setAccessToken(this.spotifyConnection.connectionToken);
         this.spotifyApi.setRefreshToken(this.spotifyConnection.refreshToken);
 
         if(this.spotifyConnection.expires <= new Date()) {
             console.log('Token expired, refreshing')
-            await this.refreshTime()
+            await this.refreshTime(userId)
         }
     }
 
-    private async refreshTime(): Promise<void> {
+    private async refreshTime(userId: string): Promise<void> {
         this.spotifyApi.refreshAccessToken().then((data) => {
             let refreshDate: Date = new Date()
             refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
             this.spotifyConnection = new SpotifyConnection(data.body.access_token, data.body.refresh_token, refreshDate)
-            this.db.updateSpotifyKeyForUser('1', this.spotifyConnection.connectionToken, this.spotifyConnection.expires)
-        }).catch(console.log)
+            this.db.updateSpotifyKeyForUser(userId, this.spotifyConnection.connectionToken, this.spotifyConnection.expires)
+        })
     }
 
-    public async searchForTrack(searchQuery: string): Promise<any> {
-        await this.checkConnection()
+    public async searchForTrack(searchQuery: string, userId: string): Promise<any> {
+        await this.checkConnection(userId)
         return await this.spotifyApi.searchTracks(searchQuery, { limit: 1 })
     }
 
-    public async skipTrack(): Promise<any> {
-        await this.checkConnection()
+    public async skipTrack(userId: string): Promise<any> {
+        await this.checkConnection(userId)
         return this.spotifyApi.skipToNext()
     }
 
-    public async getCurrentPlaybackState(): Promise<any> {
-        await this.checkConnection()
+    public async getCurrentPlaybackState(userId: string): Promise<any> {
+        await this.checkConnection(userId)
         return this.spotifyApi.getMyCurrentPlaybackState()
     }
 
-    public async queueSong(trackUri: string): Promise<void> {
-        await this.checkConnection()
+    public async queueSong(trackUri: string, userId: string): Promise<void> {
+        await this.checkConnection(userId)
         const options = {
             url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
             headers: {
@@ -67,8 +67,8 @@ export class SpotifyHelper {
         return request.post(
             options,
             function (error, response, body) {
-                if (!error && response.statusCode === 200) {
-                    console.log(body);
+                if (error) {
+                    throw(error)
                 }
             }
         );

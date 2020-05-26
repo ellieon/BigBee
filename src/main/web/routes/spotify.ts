@@ -1,9 +1,16 @@
 import * as express from 'express'
-import {EnvironmentHelper as env} from "../../common/environmentHelper";
+import {EnvironmentHelper, EnvironmentHelper as env} from "../../common/environmentHelper";
 import {DatabaseHelper} from "../../common/database";
+import {DiscordMiddleware} from "../common/discordMiddleware";
+import {DiscordHelper} from "../../common/discordHelper";
 
-const scopes = ['user-read-private', 'user-read-email', 'user-read-playback-state',
-    'user-modify-playback-state', 'user-read-currently-playing', 'user-read-recently-played']
+
+const scopes = [
+    'user-read-playback-state',
+    'user-modify-playback-state',
+    'user-read-currently-playing'
+]
+
 const SpotifyWebApi = require('spotify-web-api-node')
 const spotifyApi = new SpotifyWebApi({
     clientId: env.getSpotifyClientId(),
@@ -12,33 +19,33 @@ const spotifyApi = new SpotifyWebApi({
 });
 
 
+
+
 const database: DatabaseHelper = new DatabaseHelper();
 const spotifyAuthUrl = spotifyApi.createAuthorizeURL(scopes, "some-state");
 
 export default express.Router()
-    .get('/spotify-login', (req, res) => {
+    .get('/spotify-login', DiscordMiddleware.createHandler('spotify-login'), (req, res) => {
         res.redirect(spotifyAuthUrl)
     })
-    .get('/callback', (req, res) => {
-        console.log(req.query.code)
-        spotifyApi.authorizationCodeGrant(req.query.code)
-            .then(function (data) {
-                    spotifyApi.setAccessToken(data.body['access_token']);
-                    spotifyApi.setRefreshToken(data.body['refresh_token']);
-                    return data.body
-                })
-            .then((data) => {
-                let refreshDate: Date = new Date()
-                refreshDate.setSeconds(refreshDate.getSeconds() + data.expires_in - 10)
-                console.log(data)
-                database.setCurrentSpotifyKey('1', data.access_token, data.refresh_token, refreshDate).catch(console.log)
-            })
-            .then(spotifyApi.getMyCurrentPlaybackState.bind(spotifyApi))
-            .then((data) => {
-                 res.send("Success");
-             })
-    }).get('/logout', (req, res) => {
-        spotifyApi.resetAccessToken();
-        spotifyApi.resetRefreshToken();
-        res.send("Spotify disconnect successful");
+    .get('/callback', DiscordMiddleware.createHandler('spotify-login'), async (req, res) => {
+        try {
+            const data = await spotifyApi.authorizationCodeGrant(req.query.code)
+            spotifyApi.setAccessToken(data.body['access_token'])
+            spotifyApi.setRefreshToken(data.body['refresh_token'])
+            let refreshDate: Date = new Date()
+            refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
+
+            const userId = await DiscordHelper.getUserId(res.locals.SESSION_ID)
+            await database.setCurrentSpotifyKey(userId, data.body.access_token, data.body.refresh_token, refreshDate).catch(console.log)
+            res.redirect(EnvironmentHelper.getBaseURL());
+        } catch (err) {
+            res.send(err)
+        }
+
+    }).get('/disconnect', DiscordMiddleware.createHandler('disconnect'), async (req, res) => {
+        console.log('I am back at disconnect')
+        const user = await DiscordHelper.getUser(res.locals.SESSION_ID)
+        await database.deleteUser(user.id)
+        res.send(`User ${user.username} has been deleted from the database`)
     })
