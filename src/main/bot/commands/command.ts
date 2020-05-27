@@ -29,7 +29,7 @@ export namespace Command {
     }
 
     function findAll (path: string): void {
-        const routes: object = requireDirectory(module, path, options)
+        requireDirectory(module, path, options)
     }
 }
 

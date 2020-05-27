@@ -26,11 +26,10 @@ export class Search extends BaseCommand {
         const data = (await this.helper.searchForTrack(params, message.author.id)).body.tracks.items
 
         if(data.length === 0){
-            message.channel.send(`Could not find any song for ${params}`)
+            message.channel.send(`Could not find any song for ${params}`).catch(console.log)
         } else {
             let name = data[0].name;
             let artist = data[0].artists[0].name
-            let uri = data[0].uri
             message.channel.send(`I found the song \`${name} by ${artist}\` when searching for ${params}`)
                 .catch(console.log)
         }

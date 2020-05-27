@@ -2,7 +2,6 @@ import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper as env} from "../common/environmentHelper";
 import {TextChannel} from "discord.js";
 import {BaseCommand, Command} from "./commands/command";
-import * as path from 'path'
 
 const logger = require('winston');
 
@@ -37,8 +36,6 @@ export class BeeBot {
     }
 
     addCommands(): void {
-        let commands = Command.GetImplementations()
-
         Command.GetImplementations().forEach((command) => {
             this.addCommand(new command())
         })
