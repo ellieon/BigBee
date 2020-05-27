@@ -58,8 +58,7 @@ export class QueueSong extends Command {
             this.helper.queueSong(uri, userId).catch(async (err) => {
                 const member: DiscordClient.GuildMember = await message.guild.members.fetch(userId)
                 console.log(err)
-                message.channel.send("I could not add song to the queue for: " + member.displayName)
-                    .catch(console.log)
+                message.channel.send("I could not add song to the queue for: " + member.displayName).catch(console.log)
             })
         }
     }

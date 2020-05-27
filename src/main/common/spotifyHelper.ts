@@ -55,23 +55,26 @@ export class SpotifyHelper {
 
     public async queueSong(trackUri: string, userId: string): Promise<void> {
         await this.checkConnection(userId)
-        const options = {
-            url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
-            headers: {
-                'Accept': 'application/json',
-                'Content-Type': 'application/json',
-                'User-Agent': 'request',
-                'Authorization':  `Bearer ${this.spotifyConnection.connectionToken}`
-            }
-        };
-        return request.post(
-            options,
-            function (error, response, body) {
-                if (error) {
-                    throw(error)
+
+        const data = await this.spotifyApi.getMyCurrentPlaybackState()
+
+        if(data.body.is_playing)
+        {
+            const options = {
+                url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
+                headers: {
+                    'Accept': 'application/json',
+                    'Content-Type': 'application/json',
+                    'User-Agent': 'request',
+                    'Authorization':  `Bearer ${this.spotifyConnection.connectionToken}`
                 }
-            }
-        );
+            };
+            await request.post(options);
+        }
+
+
+
+
     }
 
 
