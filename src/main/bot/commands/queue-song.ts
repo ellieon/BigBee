@@ -2,6 +2,7 @@ import * as DiscordClient from 'discord.js'
 import {Command} from './command'
 import {SpotifyHelper} from "../../common/spotifyHelper";
 import {DatabaseHelper} from "../../common/database";
+import {GuildMember} from "discord.js";
 
 const COMMAND_STRING = 'queue'
 const NAME = 'queue'
@@ -22,7 +23,6 @@ export class QueueSong extends Command {
 
     async execute(message: DiscordClient.Message): Promise<void> {
         const params: string = message.content.substr(this.getTrigger().length, message.content.length)
-        console.log(params)
         await this.findAndPlay(message, params)
     }
 
@@ -55,10 +55,13 @@ export class QueueSong extends Command {
                     .catch(handleError)
             }
 
-            this.helper.queueSong(uri, userId).catch(async (err) => {
-                const member: DiscordClient.GuildMember = await message.guild.members.fetch(userId)
-                console.log(err)
-                message.channel.send("I could not add song to the queue for: " + member.displayName).catch(console.log)
+            await this.helper.queueSong(uri, userId).catch((err) => {
+                message.guild.members.fetch(userId).then((member: GuildMember) => {
+                    console.log(err)
+                    message.channel.send("I could not add song to the queue for: " + member.displayName)
+                        .catch(console.log)
+                })
+
             })
         }
     }
