@@ -1,20 +1,19 @@
 import * as DiscordClient from 'discord.js'
-import {Command} from './command'
+import {BaseCommand, Command} from './command'
 import {DatabaseHelper} from "../../common/database";
 import {SpotifyHelper} from "../../common/spotifyHelper";
 
 const COMMAND_STRING = 'skip'
 const NAME = 'skip'
 const DESCRIPTION = 'Skips to the next song in spotify'
-const ENVIRONMENTS = [Command.DEBUG_ENV, Command.PROD_ENV]
 
-
-export class Skip extends Command {
+@Command.register
+export class Skip extends BaseCommand {
     readonly helper: SpotifyHelper = new SpotifyHelper()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, ENVIRONMENTS, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
@@ -29,6 +28,7 @@ export class Skip extends Command {
                 message.channel.send('There are no connected Spotify users').catch(console.log)
                 return
             }
+
             await Promise.all(rows.map(async (id) => {
                     this.helper.skipTrack(id.user_id).catch(async () => {
                         const member: DiscordClient.GuildMember = await message.guild.members.fetch(id.user_id)

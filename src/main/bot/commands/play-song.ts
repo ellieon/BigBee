@@ -1,5 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import {Command} from './command'
+import {BaseCommand, Command} from './command'
 import {EnvironmentHelper as env} from "../../common/environmentHelper";
 import {DatabaseHelper, SpotifyConnection} from "../../common/database";
 import * as SpotifyWebApi from 'spotify-web-api-node'
@@ -7,18 +7,18 @@ import * as SpotifyWebApi from 'spotify-web-api-node'
 const COMMAND_STRING = 'play'
 const NAME = 'play'
 const DESCRIPTION = 'Searches for and plays a song in spotify'
-const ENVIRONMENTS = [Command.DEBUG_ENV, Command.PROD_ENV]
 
 function handleError(err): void {
     console.log(err)
 }
 
-export class PlaySong extends Command {
+@Command.register
+export class PlaySong extends BaseCommand {
     readonly spotifyApi
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, ENVIRONMENTS, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
         this.spotifyApi = new SpotifyWebApi({
             clientId: env.getSpotifyClientId(),
             clientSecret: env.getSpotifyClientSecret()

@@ -1,17 +1,17 @@
 import * as DiscordClient from 'discord.js'
-import {Command} from './command'
+import {Command, BaseCommand} from './command'
 import {DatabaseHelper} from "../../common/database";
 
 const COMMAND_STRING = 'disconnect'
 const NAME = 'disconnect'
 const DESCRIPTION = 'Disconnects the user from Spotify'
-const ENVIRONMENTS = [Command.DEBUG_ENV, Command.PROD_ENV]
 
-export class Disconnect extends Command {
+@Command.register
+export class Disconnect extends BaseCommand {
 
     private readonly db: DatabaseHelper = new DatabaseHelper()
     constructor() {
-        super(NAME, true, COMMAND_STRING, ENVIRONMENTS, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {

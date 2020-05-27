@@ -1,5 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import {Command} from './command'
+import {BaseCommand, Command} from './command'
 import {SpotifyHelper} from "../../common/spotifyHelper";
 import {DatabaseHelper} from "../../common/database";
 import {GuildMember} from "discord.js";
@@ -7,18 +7,18 @@ import {GuildMember} from "discord.js";
 const COMMAND_STRING = 'queue'
 const NAME = 'queue'
 const DESCRIPTION = 'Searches for and adds it to a play queue'
-const ENVIRONMENTS = [Command.DEBUG_ENV, Command.PROD_ENV]
 
 function handleError(err): void {
     console.log(err)
 }
 
-export class QueueSong extends Command {
+@Command.register
+export class QueueSong extends BaseCommand {
     private helper: SpotifyHelper = new SpotifyHelper()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, ENVIRONMENTS, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {

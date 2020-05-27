@@ -1,14 +1,14 @@
 import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper as env} from "../common/environmentHelper";
-
-import * as Commands from './commands/index'
 import {TextChannel} from "discord.js";
+import {BaseCommand, Command} from "./commands/command";
+import * as path from 'path'
 
 const logger = require('winston');
 
 export class BeeBot {
     readonly bot = new DiscordClient.Client()
-    private registeredCommands: Commands.Command[] = []
+    private registeredCommands: BaseCommand[] = []
 
     constructor() {
     }
@@ -37,14 +37,14 @@ export class BeeBot {
     }
 
     addCommands(): void {
-        this.addCommand(new Commands.Echo())
-        //this.addCommand(new Commands.Skip())
-        //this.addCommand(new Commands.PlaySong())
-        this.addCommand(new Commands.QueueSong())
-        this.addCommand(new Commands.Disconnect())
+        let commands = Command.GetImplementations()
+
+        Command.GetImplementations().forEach((command) => {
+            this.addCommand(new command())
+        })
     }
 
-    addCommand(command: Commands.Command): void {
+    addCommand(command: BaseCommand): void {
         logger.info(`Registered command ${command.getName()}`)
         command.setClient(this.bot)
         this.registeredCommands.push(command)
