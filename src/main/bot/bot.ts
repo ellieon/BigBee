@@ -1,6 +1,5 @@
 import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper as env} from "../common/environmentHelper";
-import {TextChannel} from "discord.js";
 import {BaseCommand, Command} from "./commands/command";
 
 const logger = require('winston');
@@ -23,7 +22,10 @@ export class BeeBot {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
             logger.info(`Debug channel = ${env.getDebugChannelName()}`)
-            this.bot.user.setPresence({activity: {name: "Everybody knows it's big dick bee! "}, status: 'online'})
+            this.bot.user.setPresence({
+                activity: {name: "Everybody knows it's big dick bee! "},
+                status: 'online'
+            }).catch(logger.error)
         });
 
         this.bot.on('message', (message) => {
@@ -53,25 +55,15 @@ export class BeeBot {
     }
 
     handleMessage(message: DiscordClient.Message): void {
-        if(this.isDebugMessage(message) || this.isProdMessage(message)) {
-            this.registeredCommands.forEach((c) => {
-                if (message.content.toLowerCase().startsWith(c.getTrigger())) {
-                    logger.info(`Executing command ${c.getName()}`)
-                    c.execute(message).then(() => logger.info(`Command executed ${c.getName()}`));
-                }
-            })
-        }
+        this.registeredCommands.forEach((c) => {
+            if (message.content.toLowerCase().startsWith(c.getTrigger())) {
+                logger.info(`Executing command ${c.getName()}`)
+                c.execute(message).then(() => logger.info(`Command executed ${c.getName()}`));
+            }
+        })
+
     }
 
-    isProdMessage(message: DiscordClient.Message): boolean {
-        return (message.channel as TextChannel).name !== env.getDebugChannelName()
-            && !env.isDevelopmentMode()
-    }
-
-    isDebugMessage(message: DiscordClient.Message): boolean {
-        return (message.channel as TextChannel).name === env.getDebugChannelName()
-            && env.isDevelopmentMode()
-    }
 
 }
 

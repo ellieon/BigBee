@@ -3,6 +3,7 @@ import * as requireDirectory from 'require-directory'
 import * as path from 'path'
 import {Message} from "discord.js";
 import {BeeBot} from "../bot";
+import {EnvironmentHelper} from "../../common/environmentHelper";
 
 export namespace Command {
     const fileExtension: string = path.extname(__filename).slice(1)
@@ -36,30 +37,13 @@ export namespace Command {
 
 export abstract class BaseCommand {
 
+    public static readonly EVERYONE_PATTERN = /@(everyone|here)/;
 
-    /**
-     * Regular expression that globally matches `@everyone` and `@here`
-     * @type {RegExp}
-     */
-    EVERYONE_PATTERN = /@(everyone|here)/g;
+    public static readonly USERS_PATTERN = /<@!?(\d{17,19})>/;
 
-    /**
-     * Regular expression that globally matches user mentions like `<@81440962496172032>`
-     * @type {RegExp}
-     */
-    USERS_PATTERN = /<@!?(\d{17,19})>/g;
+    public static readonly ROLES_PATTERN = /<@&(\d{17,19})>/;
 
-    /**
-     * Regular expression that globally matches role mentions like `<@&297577916114403338>`
-     * @type {RegExp}
-     */
-    ROLES_PATTERN = /<@&(\d{17,19})>/g;
-
-    /**
-     * Regular expression that globally matches channel mentions like `<#222079895583457280>`
-     * @type {RegExp}
-     */
-    CHANNELS_PATTERN = /<#(\d{17,19})>/g;
+    public static readonly CHANNELS_PATTERN = /<#(\d{17,19})>/;
 
     private client: DiscordClient.Client;
     private bot: BeeBot;
@@ -69,7 +53,7 @@ export abstract class BaseCommand {
         private prefixRequired: boolean,
         private commandString: string,
         private description?: string,
-        private readonly PREFIX: string = 'bee!'
+        private readonly PREFIX: string = EnvironmentHelper.isDevelopmentMode() ? 'dbee!' : 'bee!'
     ) {
     }
 

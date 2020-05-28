@@ -11,7 +11,7 @@ export class Search extends BaseCommand {
 
     private readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
     constructor() {
-        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
