@@ -1,10 +1,10 @@
 import * as DiscordClient from 'discord.js'
-import {BaseCommand, Command} from './command'
-import {SpotifyHelper} from "../../common/spotifyHelper";
-import {DatabaseHelper, UserID} from "../../common/database";
+import {BaseCommand, Command} from '../command'
+import {SpotifyHelper} from "../../../common/spotifyHelper";
+import {DatabaseHelper, UserID} from "../../../common/database";
 
 const COMMAND_STRING = 'queue'
-const NAME = 'queue'
+const NAME = "bee!queue <song_name>"
 const DESCRIPTION = 'Searches for and adds it to a play queue'
 
 function handleError(err): void {
@@ -17,7 +17,7 @@ export class QueueSong extends BaseCommand {
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {

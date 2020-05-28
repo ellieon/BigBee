@@ -3,7 +3,7 @@ import {Command, BaseCommand} from './command'
 import {DatabaseHelper} from "../../common/database";
 
 const COMMAND_STRING = 'disconnect'
-const NAME = 'disconnect'
+const NAME = 'bee!disconnect'
 const DESCRIPTION = 'Disconnects the user from Spotify'
 
 @Command.register
@@ -11,7 +11,7 @@ export class Disconnect extends BaseCommand {
 
     private readonly db: DatabaseHelper = new DatabaseHelper()
     constructor() {
-        super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
+        super(NAME, true, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {

@@ -2,6 +2,7 @@ import * as DiscordClient from 'discord.js'
 import * as requireDirectory from 'require-directory'
 import * as path from 'path'
 import {Message} from "discord.js";
+import {BeeBot} from "../bot";
 
 export namespace Command {
     const fileExtension: string = path.extname(__filename).slice(1)
@@ -36,13 +37,13 @@ export namespace Command {
 export abstract class BaseCommand {
 
     private client: DiscordClient.Client;
+    private bot: BeeBot;
 
     protected constructor(
         private name: string,
         private prefixRequired: boolean,
         private commandString: string,
         private description?: string,
-        private helpText?: string,
         private readonly PREFIX: string = 'bee!'
     ) {
     }
@@ -78,16 +79,20 @@ export abstract class BaseCommand {
         return this.client
     }
 
+    public setBot(bot: BeeBot) {
+        this.bot = bot
+    }
+
+    public getBot() {
+        return this.bot
+    }
+
     getName(): string {
         return this.name
     }
 
     getDescription(): string {
         return this.description
-    }
-
-    getHelpText(): string {
-        return this.helpText
     }
 }
 

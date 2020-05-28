@@ -1,9 +1,9 @@
 import * as DiscordClient from 'discord.js'
-import {BaseCommand, Command} from './command'
-import {SpotifyHelper} from "../../common/spotifyHelper";
+import {BaseCommand, Command} from '../command'
+import {SpotifyHelper} from "../../../common/spotifyHelper";
 
 const COMMAND_STRING = 'search'
-const NAME = 'search'
+const NAME = "bee!search search <song name>"
 const DESCRIPTION = 'Searches for a song on Spotify and echoes the result'
 
 @Command.register

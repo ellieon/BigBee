@@ -8,7 +8,7 @@ const DESCRIPTION = 'Echoes BIG DICK BEE!'
 @Command.register
 export class Echo extends BaseCommand {
     constructor() {
-        super(NAME, false, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
+        super(NAME, false, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
