@@ -19,7 +19,7 @@ export class BeeBot {
         });
 
         logger.level = EnvironmentHelper.getLoggingLevel()
-
+        logger.info(`Log level set to ${EnvironmentHelper.getLoggingLevel()}`)
         this.bot.on('ready', () => {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
