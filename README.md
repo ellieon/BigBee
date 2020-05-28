@@ -19,9 +19,9 @@ The following environment variables must be set and accessible to BDB:
 - `BEE_DISCORD_BOT_TOKEN` - The token for the bot you have created in your BDB Discord app that this server will log in with.
 - `BEE_SPOTIFY_CLIENT_ID` - Your Spotify BDB application client ID
 - `BEE_SPOTIFY_CLIENT_SECRET` - Your Spotify BDB application client secret
-- `BEE_URL` - The base URL that the BDB frontend will sit on, this is used to generate callbacks. 
+- `BEE_URL` - The base URL that the BDB frontend will sit on, this is used to generate callbacks
 - `BEE_ENV` - `[PROD|DEV]` the current environment for BDB
-- `BEE_DEBUG_CHANNEL` - (Defaults to blank) When BEE_ENV is dev, only reacts to this channel, otherwise avoids this channel
+- `BEE_LOGGING_LEVEL` - `[info|debug]` the output level for logging, info being the core, debug being more verbose
 - `DATABASE_URL`= The connection string of a PostgreSQL database for this application to use 
     eg: `postgresql://big_dick_bee:big_dick_bee@localhost:5432/big_dick_bee`
 - `PORT` - (Defaults to 3000) The port for the frontend application to bind to

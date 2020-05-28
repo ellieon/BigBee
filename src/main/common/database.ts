@@ -1,8 +1,9 @@
-    import {EnvironmentHelper as env} from "./environmentHelper";
+import {EnvironmentHelper as env} from "./environmentHelper";
+import * as logger from 'winston'
 
 const Pool = require('pg').Pool
 
-export class SpotifyConnection{
+export class SpotifyConnection {
     constructor(
         public connectionToken: string,
         public refreshToken: string,
@@ -14,6 +15,7 @@ export class SpotifyConnection{
 export class UserID {
     user_id: string
 }
+
 export class DatabaseHelper {
 
     private static readonly CREATE_UPDATE: string = `
@@ -34,13 +36,16 @@ export class DatabaseHelper {
     }
 
     async getSpotifyKeyForUser(userId: string): Promise<SpotifyConnection> {
+        logger.debug(`DatabaseHelper: get spotify key for ${userId}`)
         const res =
             await this.pool.query(
-               DatabaseHelper.GET_KEY, [userId]).catch(console.log)
+                DatabaseHelper.GET_KEY, [userId]).catch(logger.error)
 
-        if(res.rows.length === 0) {
+        if (res.rows.length === 0) {
+            logger.debug(`DatabaseHelper: found no user`)
             return undefined
         } else {
+            logger.debug(`DatabaseHelper: found a user`)
             const row = res.rows[0];
             let expires: Date = new Date(row.expires)
             return new SpotifyConnection(row.connection_token, row.refresh_token, expires)
@@ -48,23 +53,26 @@ export class DatabaseHelper {
     }
 
     async setCurrentSpotifyKey(
-        userId: string, connection_token: string, refresh_token: string, expires: Date): Promise<void>{
+        userId: string, connection_token: string, refresh_token: string, expires: Date): Promise<void> {
+        logger.debug(`DatabaseHelper: set spotify key ${userId}, connection_token:${connection_token}, refresh_token:${refresh_token}, expires:${expires}`)
         return await this.pool.query(DatabaseHelper.CREATE_UPDATE,
-            [userId, connection_token, refresh_token, expires.toISOString()])
+            [userId, connection_token, refresh_token, expires.toISOString()]).catch(logger.error)
     }
 
     async updateSpotifyKeyForUser(
-        userId: string, connection_token: string, expires: Date): Promise<void>{
+        userId: string, connection_token: string, expires: Date): Promise<void> {
+        logger.debug(`DatabaseHelper: update spotify key for user, userId:${userId}, connection_token:${connection_token}, expires:${expires}`)
         return await this.pool.query("UPDATE spotify_connections SET user_id = $1, connection_token = $2, expires = $3 WHERE user_id = $1",
             [userId, connection_token, expires.toISOString()])
     }
 
     async getAllUserIds(): Promise<UserID[]> {
-        return (await this.pool.query(DatabaseHelper.GET_USERS)).rows
+
+        return (await this.pool.query(DatabaseHelper.GET_USERS).catch(logger.error)).rows
     }
 
-    async deleteUser(userId: string){
-        return await this.pool.query(DatabaseHelper.DELETE_USERS, [userId])
+    async deleteUser(userId: string) {
+        return await this.pool.query(DatabaseHelper.DELETE_USERS, [userId]).catch(logger.error)
     }
 
 

@@ -1,5 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import {EnvironmentHelper as env} from "../common/environmentHelper";
+import {EnvironmentHelper, EnvironmentHelper as env} from "../common/environmentHelper";
 import {BaseCommand, Command} from "./commands/command";
 
 const logger = require('winston');
@@ -12,12 +12,14 @@ export class BeeBot {
     }
 
     init() {
+
         logger.remove(logger.transports.Console);
         logger.add(new logger.transports.Console, {
             colorize: true
         });
-        logger.level = 'debug';
 
+        logger.level = EnvironmentHelper.getLoggingLevel()
+        logger.info(`Log level set to ${EnvironmentHelper.getLoggingLevel()}`)
         this.bot.on('ready', () => {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
@@ -58,12 +60,12 @@ export class BeeBot {
         this.registeredCommands.forEach((c) => {
             if (message.content.toLowerCase().startsWith(c.getTrigger())) {
                 logger.info(`Executing command ${c.getName()}`)
-                c.execute(message).then(() => logger.info(`Command executed ${c.getName()}`));
+                c.execute(message)
+                    .then(() => logger.info(`Command executed ${c.getName()}`))
+                    .catch(logger.error)
             }
         })
-
     }
-
 
 }
 

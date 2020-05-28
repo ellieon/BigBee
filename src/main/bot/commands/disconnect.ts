@@ -1,6 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {Command, BaseCommand} from './command'
 import {DatabaseHelper} from "../../common/database";
+import * as logger from 'winston'
 
 const COMMAND_STRING = 'disconnect'
 const NAME = 'bee!disconnect'
@@ -17,6 +18,6 @@ export class Disconnect extends BaseCommand {
     async execute(message: DiscordClient.Message): Promise<void> {
         await this.db.deleteUser(message.author.id)
             .catch(() => message.channel.send(`I was unable to disconnect ${message.guild.member(message.author).displayName}`))
-            .then(()=>message.channel.send(`I have disconnected ${message.guild.member(message.author).displayName} from Spotify playback`).catch(console.log))
+            .then(() => message.channel.send(`I have disconnected ${message.guild.member(message.author).displayName} from Spotify playback`).catch(logger.error))
     }
 }
