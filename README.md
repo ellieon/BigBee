@@ -5,7 +5,7 @@ connected user by other members of the Discord.
 
 ## Requirements
 You will need each of the following installed to be able to set up a development environment for BDB:
-- Node.js
+- Node.js - 12.0.10 or greater
 - PostgreSQL server
 
 You will also need developer accounts for the following, with an application created on each of the respective services, so you can leverage the OAuth2 tokens:
@@ -52,8 +52,6 @@ This is currently a very rudimentary system that only supports one user for the 
 
 ## TODO
 This bot is in very early stages of development, so the following features are planned:
-- Multiple user support by linking Discord and Spotify accounts together
-- Scheduling to refresh Spotify tokens before they expire"
 - An actual proper frontend
 - A bunch of other commands (Who knows yet)
 - Regex command matching
