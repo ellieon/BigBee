@@ -6,7 +6,7 @@ connected user by other members of the Discord.
 ## Requirements
 You will need each of the following installed to be able to set up a development environment for BDB:
 - Node.js - 12.0.10 or greater
-- PostgreSQL server
+- PostgreSQL server - with a valid connection string for a database and user that BDB can connect with
 
 You will also need developer accounts for the following, with an application created on each of the respective services, so you can leverage the OAuth2 tokens:
 - Spotify
