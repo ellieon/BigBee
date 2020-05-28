@@ -57,7 +57,8 @@ export class SpotifyHelper {
 
     public async searchForTrack(searchQuery: string, userId: string): Promise<any> {
         await this.checkConnection(userId)
-        return await this.spotifyApi.searchTracks(searchQuery, { limit: 1 })
+        const trackData = await this.spotifyApi.searchTracks(searchQuery, { limit: 1 }).catch(console.log)
+        return trackData
     }
 
     public async skipTrack(userId: string): Promise<any> {
