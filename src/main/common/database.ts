@@ -36,7 +36,7 @@ export class DatabaseHelper {
     async getSpotifyKeyForUser(userId: string): Promise<SpotifyConnection> {
         const res =
             await this.pool.query(
-               DatabaseHelper.GET_KEY, [userId])
+               DatabaseHelper.GET_KEY, [userId]).catch(console.log)
 
         if(res.rows.length === 0) {
             return undefined

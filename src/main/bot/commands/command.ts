@@ -36,6 +36,31 @@ export namespace Command {
 
 export abstract class BaseCommand {
 
+
+    /**
+     * Regular expression that globally matches `@everyone` and `@here`
+     * @type {RegExp}
+     */
+    EVERYONE_PATTERN = /@(everyone|here)/g;
+
+    /**
+     * Regular expression that globally matches user mentions like `<@81440962496172032>`
+     * @type {RegExp}
+     */
+    USERS_PATTERN = /<@!?(\d{17,19})>/g;
+
+    /**
+     * Regular expression that globally matches role mentions like `<@&297577916114403338>`
+     * @type {RegExp}
+     */
+    ROLES_PATTERN = /<@&(\d{17,19})>/g;
+
+    /**
+     * Regular expression that globally matches channel mentions like `<#222079895583457280>`
+     * @type {RegExp}
+     */
+    CHANNELS_PATTERN = /<#(\d{17,19})>/g;
+
     private client: DiscordClient.Client;
     private bot: BeeBot;
 

@@ -2,7 +2,7 @@ import * as DiscordClient from 'discord.js'
 import {BaseCommand, Command} from './command'
 
 const COMMAND_STRING = 'big dick bee'
-const NAME = 'echo'
+const NAME = 'big dick bee  '
 const DESCRIPTION = 'Echoes BIG DICK BEE!'
 
 @Command.register

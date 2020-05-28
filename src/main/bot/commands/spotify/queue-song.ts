@@ -4,9 +4,9 @@ import {SpotifyHelper} from "../../../common/spotifyHelper";
 import {DatabaseHelper, UserID} from "../../../common/database";
 
 const COMMAND_STRING = 'queue'
-const NAME = "bee!queue <song_name>"
+const NAME = "bee!queue [user] <song_name>"
 const DESCRIPTION = 'Searches for and adds it to a play queue'
-
+const USER_CAPTURE = /<@!?(\d{17,19})>/
 function handleError(err): void {
     console.log(err)
 }
@@ -31,7 +31,16 @@ export class QueueSong extends BaseCommand {
             return
         }
 
-        const users: UserID[] = await this.db.getAllUserIds()
+        let matches = params.match(USER_CAPTURE)
+
+        let users: UserID[]
+        if(matches && matches.length > 1) {
+            users = [{user_id: matches[1]}]
+            params = params.replace(matches[0], "")
+        } else {
+            users = await this.db.getAllUserIds()
+        }
+
         let name: string, artist: string, uri: string = undefined
 
         if(users.length === 0) {
@@ -47,6 +56,7 @@ export class QueueSong extends BaseCommand {
 
                 if (tracks.length === 0) {
                     message.channel.send("I was unable to find any tracks by the name" + params).catch(console.log)
+                    return
                 }
 
                 name = tracks[0].name;
@@ -58,7 +68,14 @@ export class QueueSong extends BaseCommand {
             await this.helper.queueSong(uri, userId).catch(console.log)
         }
 
-        await message.channel.send(`Added the song \`${name} by ${artist}\` to all user's play queue`)
-            .catch(handleError)
+        const successMessage = `Added the song \`${name} by ${artist}\` to`
+        if(users.length === 1) {
+            message.channel.send(`${successMessage} to <@!${users[0].user_id}>'s queue`)
+                .catch(console.log)
+        } else {
+            message.channel.send(`${successMessage} to all users queue`)
+                .catch(console.log)
+        }
+
     }
 }
