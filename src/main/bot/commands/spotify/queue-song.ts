@@ -70,10 +70,10 @@ export class QueueSong extends BaseCommand {
 
         const successMessage = `Added the song \`${name} by ${artist}\` to`
         if(users.length === 1) {
-            message.channel.send(`${successMessage} to <@!${users[0].user_id}>'s queue`)
+            message.channel.send(`${successMessage} <@!${users[0].user_id}>'s queue`)
                 .catch(console.log)
         } else {
-            message.channel.send(`${successMessage} to all users queue`)
+            message.channel.send(`${successMessage}  all users queue`)
                 .catch(console.log)
         }
 
