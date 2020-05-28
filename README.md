@@ -46,8 +46,8 @@ please see the documentation for db-migrate(https://www.npmjs.com/package/db-mig
 for how to manipulate the database in these scripts
 
 ## Usage
-Once the server is up and running, A user can connect their Spotify accounts by visiting `<BASE_URL>/spotify-login`.
-This is currently a very rudimentary system that only supports one user for the time being.
+Once the server is up and running, A user can connect their Spotify accounts by visiting `<BASE_URL>`.
+A list of commands can be obtained by messaging `bee!help` to the bot user.
 
 
 ## TODO
