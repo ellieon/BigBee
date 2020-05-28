@@ -24,7 +24,10 @@ export class BeeBot {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
             logger.info(`Debug channel = ${env.getDebugChannelName()}`)
-            this.bot.user.setPresence({activity: {name: "Everybody knows it's big dick bee! "}, status: 'online'})
+            this.bot.user.setPresence({
+                activity: {name: "Everybody knows it's big dick bee! "},
+                status: 'online'
+            }).catch(logger.error)
         });
 
         this.bot.on('message', (message) => {

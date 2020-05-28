@@ -55,6 +55,8 @@ export class SpotifyHelper {
         let refreshDate: Date = new Date()
         refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
         this.spotifyConnection = new SpotifyConnection(data.body.access_token, data.body.refresh_token, refreshDate)
+        this.spotifyApi.setAccessToken(this.spotifyConnection.connectionToken)
+        this.spotifyApi.setRefreshToken(this.spotifyConnection.refreshToken)
         await this.db.updateSpotifyKeyForUser(userId, this.spotifyConnection.connectionToken, this.spotifyConnection.expires).catch(logger.error)
         logger.debug(`SpotifyHelper: refresh token done`)
 
@@ -100,7 +102,7 @@ export class SpotifyHelper {
                     'Authorization':  `Bearer ${this.spotifyConnection.connectionToken}`
                 }
             };
-            await request.post(options).catch(logger.error);
+            await request.post(options)
         }
         logger.debug(`SpotifyHelper: Queue song complete`)
     }
