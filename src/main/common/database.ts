@@ -10,6 +10,10 @@ export class SpotifyConnection{
     ) {
     }
 }
+
+export class UserID {
+    user_id: string
+}
 export class DatabaseHelper {
 
     private static readonly CREATE_UPDATE: string = `
@@ -55,7 +59,7 @@ export class DatabaseHelper {
             [userId, connection_token, expires.toISOString()])
     }
 
-    async getAllUserIds(): Promise<string[]> {
+    async getAllUserIds(): Promise<UserID[]> {
         return (await this.pool.query(DatabaseHelper.GET_USERS)).rows
     }
 

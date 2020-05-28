@@ -1,6 +1,6 @@
 import * as DiscordClient from 'discord.js'
 import {BaseCommand, Command} from './command'
-import {DatabaseHelper} from "../../common/database";
+import {DatabaseHelper, UserID} from "../../common/database";
 import {SpotifyHelper} from "../../common/spotifyHelper";
 
 const COMMAND_STRING = 'skip'
@@ -9,7 +9,7 @@ const DESCRIPTION = 'Skips to the next song in spotify'
 
 @Command.register
 export class Skip extends BaseCommand {
-    readonly helper: SpotifyHelper = new SpotifyHelper()
+    readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
@@ -22,22 +22,18 @@ export class Skip extends BaseCommand {
 
     async skipSongAndOutput(message: DiscordClient.Message) {
         try {
-            const rows: any[] = await this.db.getAllUserIds()
+            const rows: UserID[] = await this.db.getAllUserIds()
 
             if(rows.length === 0) {
                 message.channel.send('There are no connected Spotify users').catch(console.log)
                 return
             }
 
-            await Promise.all(rows.map(async (id) => {
-                    this.helper.skipTrack(id.user_id).catch(async () => {
-                        const member: DiscordClient.GuildMember = await message.guild.members.fetch(id.user_id)
-                        message.channel.send("I could not skip for " + member.displayName)
-                            .catch(console.log)
-                        }
-                    )
-                }
-            ));
+            for(let i = 0; i < rows.length; i++) {
+                const userId = rows[i].user_id
+                await this.helper.getCurrentPlaybackState(userId)
+                await this.helper.skipTrack(userId).catch(console.log)
+            }
 
             message.channel.send('Song has been skipped for all users').catch(console.log)
 
@@ -47,11 +43,4 @@ export class Skip extends BaseCommand {
             console.log(err)
         }
     }
-
-    sleep(ms) {
-        return new Promise((resolve) => {
-            setTimeout(resolve, ms);
-        });
-    }
-
 }

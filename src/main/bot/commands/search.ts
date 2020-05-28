@@ -9,7 +9,7 @@ const DESCRIPTION = 'Searches for a song on Spotify and echoes the result'
 @Command.register
 export class Search extends BaseCommand {
 
-    private readonly helper: SpotifyHelper = new SpotifyHelper()
+    private readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
     constructor() {
         super(NAME, true, COMMAND_STRING, COMMAND_STRING, DESCRIPTION)
     }
@@ -30,7 +30,7 @@ export class Search extends BaseCommand {
         } else {
             let name = data[0].name;
             let artist = data[0].artists[0].name
-            message.channel.send(`I found the song \`${name} by ${artist}\` when searching for ${params}`)
+            message.channel.send(`I found the song \`${name} by ${artist}\` when searching for \`${params}\``)
                 .catch(console.log)
         }
     }

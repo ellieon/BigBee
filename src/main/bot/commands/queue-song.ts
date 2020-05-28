@@ -1,8 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {BaseCommand, Command} from './command'
 import {SpotifyHelper} from "../../common/spotifyHelper";
-import {DatabaseHelper} from "../../common/database";
-import {GuildMember} from "discord.js";
+import {DatabaseHelper, UserID} from "../../common/database";
 
 const COMMAND_STRING = 'queue'
 const NAME = 'queue'
@@ -14,7 +13,7 @@ function handleError(err): void {
 
 @Command.register
 export class QueueSong extends BaseCommand {
-    private helper: SpotifyHelper = new SpotifyHelper()
+    private helper: SpotifyHelper = SpotifyHelper.getInstance()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
@@ -32,37 +31,34 @@ export class QueueSong extends BaseCommand {
             return
         }
 
-        const rows: any[] = await this.db.getAllUserIds()
+        const users: UserID[] = await this.db.getAllUserIds()
         let name: string, artist: string, uri: string = undefined
 
-        if(rows.length === 0) {
-            message.channel.send("There are currently no registered spotify users")
+        if(users.length === 0) {
+            message.channel.send("There are currently no registered spotify users").catch(console.log)
         }
-        for (let i = 0; i < rows.length; i++) {
-            const userId: string = rows[i].user_id
+
+        for (let i = 0; i < users.length; i++) {
+            const userId: string = users[i].user_id
 
             if (!uri) {
-                const data = (await this.helper.searchForTrack(params, userId)).body.tracks.items
+                const trackData = await this.helper.searchForTrack(params, userId)
+                const tracks = trackData.body.tracks.items
 
-                if (data.length === 0) {
+                if (tracks.length === 0) {
                     message.channel.send("I was unable to find any tracks by the name" + params).catch(console.log)
                 }
 
-                name = data[0].name;
-                artist = data[0].artists[0].name
-                uri = data[0].uri
-                await message.channel.send(`Added the song \`${name} by ${artist}\` to all user's play queue`)
-                    .catch(handleError)
+                name = tracks[0].name;
+                artist = tracks[0].artists[0].name
+                uri = tracks[0].uri
+
             }
 
-            await this.helper.queueSong(uri, userId).catch((err) => {
-                message.guild.members.fetch(userId).then((member: GuildMember) => {
-                    console.log(err)
-                    message.channel.send("I could not add song to the queue for: " + member.displayName)
-                        .catch(console.log)
-                })
-
-            })
+            await this.helper.queueSong(uri, userId).catch(console.log)
         }
+
+        await message.channel.send(`Added the song \`${name} by ${artist}\` to all user's play queue`)
+            .catch(handleError)
     }
 }

@@ -4,11 +4,14 @@ import * as SpotifyWebApi from 'spotify-web-api-node'
 import * as request from 'request'
 
 export class SpotifyHelper {
+
+    private static instance: SpotifyHelper
+
     private readonly db: DatabaseHelper
     private readonly spotifyApi: SpotifyWebApi;
     private spotifyConnection: SpotifyConnection = undefined;
 
-    constructor() {
+    private constructor() {
         this.spotifyApi = new SpotifyWebApi({
             clientId: env.getSpotifyClientId(),
             clientSecret: env.getSpotifyClientSecret(),
@@ -16,6 +19,15 @@ export class SpotifyHelper {
         });
 
         this.db = new DatabaseHelper()
+    }
+
+
+    public static getInstance(): SpotifyHelper {
+        if(!SpotifyHelper.instance) {
+            SpotifyHelper.instance = new SpotifyHelper()
+        }
+
+        return SpotifyHelper.instance
     }
 
     private async checkConnection(userId: string): Promise<void> {
@@ -71,12 +83,5 @@ export class SpotifyHelper {
             };
             await request.post(options);
         }
-
-
-
-
     }
-
-
-
 }
