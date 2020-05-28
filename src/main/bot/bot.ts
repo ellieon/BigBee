@@ -1,6 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import {EnvironmentHelper as env} from "../common/environmentHelper";
-import {TextChannel} from "discord.js";
+import {EnvironmentHelper, EnvironmentHelper as env} from "../common/environmentHelper";
 import {BaseCommand, Command} from "./commands/command";
 
 const logger = require('winston');
@@ -13,11 +12,13 @@ export class BeeBot {
     }
 
     init() {
+
         logger.remove(logger.transports.Console);
         logger.add(new logger.transports.Console, {
             colorize: true
         });
-        logger.level = 'debug';
+
+        logger.level = EnvironmentHelper.getLoggingLevel()
 
         this.bot.on('ready', () => {
             logger.info('Connected');
@@ -53,24 +54,14 @@ export class BeeBot {
     }
 
     handleMessage(message: DiscordClient.Message): void {
-        if(this.isDebugMessage(message) || this.isProdMessage(message)) {
-            this.registeredCommands.forEach((c) => {
-                if (message.content.toLowerCase().startsWith(c.getTrigger())) {
-                    logger.info(`Executing command ${c.getName()}`)
-                    c.execute(message).then(() => logger.info(`Command executed ${c.getName()}`));
-                }
-            })
-        }
-    }
-
-    isProdMessage(message: DiscordClient.Message): boolean {
-        return (message.channel as TextChannel).name !== env.getDebugChannelName()
-            && !env.isDevelopmentMode()
-    }
-
-    isDebugMessage(message: DiscordClient.Message): boolean {
-        return (message.channel as TextChannel).name === env.getDebugChannelName()
-            && env.isDevelopmentMode()
+        this.registeredCommands.forEach((c) => {
+            if (message.content.toLowerCase().startsWith(c.getTrigger())) {
+                logger.info(`Executing command ${c.getName()}`)
+                c.execute(message)
+                    .then(() => logger.info(`Command executed ${c.getName()}`))
+                    .catch(logger.error)
+            }
+        })
     }
 
 }

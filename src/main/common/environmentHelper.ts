@@ -47,4 +47,12 @@ export class EnvironmentHelper {
     static getDatabaseURL(): string {
         return process.env.DATABASE_URL
     }
+
+    static getLoggingLevel(): string {
+        if(this.isDevelopmentMode()) {
+            return process.env.BEE_LOGGING_LEVEL || 'debug'
+        } else {
+            return process.env.BEE_LOGGING_LEVEL || 'info'
+        }
+    }
 }

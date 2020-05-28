@@ -2,6 +2,7 @@ import {DatabaseHelper, SpotifyConnection} from "./database";
 import {EnvironmentHelper as env} from "./environmentHelper";
 import * as SpotifyWebApi from 'spotify-web-api-node'
 import * as request from 'request'
+import * as logger from 'winston'
 
 export class SpotifyHelper {
 
@@ -31,6 +32,7 @@ export class SpotifyHelper {
     }
 
     private async checkConnection(userId: string): Promise<void> {
+        logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
         this.spotifyConnection = await this.db.getSpotifyKeyForUser(userId)
         if(!this.spotifyConnection){
             console.log('No token found for ' + userId)
@@ -44,34 +46,45 @@ export class SpotifyHelper {
             console.log('Token expired, refreshing')
             await this.refreshTime(userId)
         }
+        logger.debug(`SpotifyHelper: check connection complete`)
     }
 
     private async refreshTime(userId: string): Promise<void> {
-        const data = await this.spotifyApi.refreshAccessToken().catch(console.log)
+        logger.debug(`SpotifyHelper: Refreshing token for ${userId}`)
+        const data = await this.spotifyApi.refreshAccessToken().catch(logger.error)
         let refreshDate: Date = new Date()
         refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
         this.spotifyConnection = new SpotifyConnection(data.body.access_token, data.body.refresh_token, refreshDate)
-        await this.db.updateSpotifyKeyForUser(userId, this.spotifyConnection.connectionToken, this.spotifyConnection.expires).catch(console.log)
+        await this.db.updateSpotifyKeyForUser(userId, this.spotifyConnection.connectionToken, this.spotifyConnection.expires).catch(logger.error)
+        logger.debug(`SpotifyHelper: refresh token done`)
 
     }
 
     public async searchForTrack(searchQuery: string, userId: string): Promise<any> {
+        logger.debug(`SpotifyHelper: Searching for track with search query: ${searchQuery} and userId ${userId}`)
         await this.checkConnection(userId)
-        const trackData = await this.spotifyApi.searchTracks(searchQuery, { limit: 1 }).catch(console.log)
+        const trackData = await this.spotifyApi.searchTracks(searchQuery, { limit: 1 }).catch(logger.error)
+        logger.debug(`SpotifyHelper: Searching for track done`)
         return trackData
     }
 
     public async skipTrack(userId: string): Promise<any> {
+        logger.debug(`SpotifyHelper: Skipping track for ${userId}`)
         await this.checkConnection(userId)
-        return this.spotifyApi.skipToNext()
+        await this.spotifyApi.skipToNext()
+        logger.debug(`SpotifyHelper: track skip done`)
     }
 
     public async getCurrentPlaybackState(userId: string): Promise<any> {
+        logger.debug(`SpotifyHelper: Get current playback state for ${userId}`)
         await this.checkConnection(userId)
-        return this.spotifyApi.getMyCurrentPlaybackState()
+        const data = this.spotifyApi.getMyCurrentPlaybackState()
+        logger.debug(`SpotifyHelper get current playback state complete`)
+        return data
     }
 
     public async queueSong(trackUri: string, userId: string): Promise<void> {
+        logger.debug(`SpotifyHelper: Queue song with trackUri: ${trackUri} for user ${userId}`)
         await this.checkConnection(userId)
 
         const data = await this.spotifyApi.getMyCurrentPlaybackState()
@@ -87,7 +100,8 @@ export class SpotifyHelper {
                     'Authorization':  `Bearer ${this.spotifyConnection.connectionToken}`
                 }
             };
-            await request.post(options);
+            await request.post(options).catch(logger.error);
         }
+        logger.debug(`SpotifyHelper: Queue song complete`)
     }
 }

@@ -1,5 +1,6 @@
 import {EnvironmentHelper as env} from "./environmentHelper";
 const DiscordOauth2 = require('discord-oauth2')
+import * as logger from 'winston'
 
 const oauth = new DiscordOauth2({
     clientId: env.getDiscordClientId(),
@@ -9,10 +10,13 @@ const oauth = new DiscordOauth2({
 
 export class DiscordHelper {
     public static async getUserId(authorisationToken: string) {
-        return (await oauth.getUser(authorisationToken)).id
+        logger.debug(`DiscordHelper get user id with token ${authorisationToken}`)
+        const data = await oauth.getUser(authorisationToken).catch(logger.error)
+        return data.id
     }
 
     public static async getUser(auth: string) {
-        return await oauth.getUser(auth)
+        logger.debug(`DiscordHelper get user with auth ${auth}`)
+        return await oauth.getUser(auth).catch(logger.error)
     }
 }
