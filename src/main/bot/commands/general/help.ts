@@ -1,5 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import {BaseCommand, Command} from './command'
+import {BaseCommand, Command} from '../command'
 
 const COMMAND_STRING = 'help'
 const NAME = 'bee!help'

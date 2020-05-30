@@ -1,6 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {EnvironmentHelper, EnvironmentHelper as env} from "../common/environmentHelper";
 import {BaseCommand, Command} from "./commands/command";
+import {BotExtension, Extension} from "./extensions/botExtension";
 
 const logger = require('winston');
 
@@ -12,7 +13,6 @@ export class BeeBot {
     }
 
     init() {
-
         logger.remove(logger.transports.Console);
         logger.add(new logger.transports.Console, {
             colorize: true
@@ -20,6 +20,7 @@ export class BeeBot {
 
         logger.level = EnvironmentHelper.getLoggingLevel()
         logger.info(`Log level set to ${EnvironmentHelper.getLoggingLevel()}`)
+
         this.bot.on('ready', () => {
             logger.info('Connected');
             logger.info(`Environment = ${env.getEnvironment()}`)
@@ -34,9 +35,10 @@ export class BeeBot {
             this.handleMessage(message)
         });
 
-
         this.bot.login(env.getDiscordBotToken()).then(logger.info('Bot login successful'));
+
         this.addCommands()
+        this.addExtensions()
     }
 
     addCommands(): void {
@@ -45,8 +47,20 @@ export class BeeBot {
         })
     }
 
+    addExtensions(): void {
+        Extension.GetImplementations().forEach((extension) => {
+            this.addExtension(new extension())
+        })
+    }
+
     getCommands(): BaseCommand[] {
         return this.registeredCommands
+    }
+
+    addExtension(extension: BotExtension) {
+        logger.info(`Initialising extension ${extension.getName()}`)
+        extension.setClient(this.bot)
+        extension.init()
     }
 
     addCommand(command: BaseCommand): void {

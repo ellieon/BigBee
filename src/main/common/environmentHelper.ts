@@ -48,6 +48,10 @@ export class EnvironmentHelper {
         return process.env.DATABASE_URL
     }
 
+    static getGreeterChannel(): string {
+        return process.env.BEE_GREETER_CHANNEL
+    }
+
     static getLoggingLevel(): string {
         if(this.isDevelopmentMode()) {
             return process.env.BEE_LOGGING_LEVEL || 'debug'
