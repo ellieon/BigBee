@@ -3,16 +3,17 @@ import {BaseCommand} from '../command'
 import {DatabaseHelper, UserID} from "../../../common/database";
 import {SpotifyHelper} from "../../../common/spotifyHelper";
 
-const COMMAND_STRING = 'skip'
+const COMMAND_STRING = /^bee!skip$/
 const NAME = 'skip'
 const DESCRIPTION = 'Skips to the next song in spotify'
 
 export class Skip extends BaseCommand {
+
     readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, DESCRIPTION)
+        super(NAME, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
