@@ -21,6 +21,7 @@ export class Echo extends BaseCommand {
         helpText += "```"
 
         message.channel.send(helpText).catch(console.log)
+        this.checkReactMessage(message)
     }
 
 }

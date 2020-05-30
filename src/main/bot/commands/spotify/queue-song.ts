@@ -56,6 +56,7 @@ export class QueueSong extends BaseCommand {
 
                 if (!trackData) {
                     message.channel.send("I was unable to connect to spotify to search for tracks").catch(logger.error)
+                    this.crossReactMessage(message)
                     return
                 }
 
@@ -63,6 +64,7 @@ export class QueueSong extends BaseCommand {
 
                 if (tracks.length === 0) {
                     message.channel.send("I was unable to find any tracks by the name" + params).catch(logger.error)
+                    this.crossReactMessage(message)
                     return
                 }
 

@@ -21,6 +21,7 @@ export class Search extends BaseCommand {
         console.log(params)
         if (!params || params.length === 0) {
             message.channel.send("I need a song name to search `bee!search [search_term]`").catch(logger.error)
+            this.crossReactMessage(message)
             return
         }
 
@@ -28,11 +29,13 @@ export class Search extends BaseCommand {
 
         if(data.length === 0){
             message.channel.send(`Could not find any song for ${params}`).catch(logger.error)
+            this.checkReactMessage(message)
         } else {
             let name = data[0].name;
             let artist = data[0].artists[0].name
             message.channel.send(`I found the song \`${name} by ${artist}\` when searching for \`${params}\``)
                 .catch(logger.error)
+            this.checkReactMessage(message)
         }
     }
 }

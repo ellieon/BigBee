@@ -4,6 +4,7 @@ import * as path from 'path'
 import {Message} from "discord.js";
 import {BeeBot} from "../bot";
 import {EnvironmentHelper} from "../../common/environmentHelper";
+import * as logger from 'winston'
 
 export namespace Command {
     const fileExtension: string = path.extname(__filename).slice(1)
@@ -94,6 +95,14 @@ export abstract class BaseCommand {
 
     public getBot() {
         return this.bot
+    }
+
+    protected checkReactMessage(message: Message) {
+        message.react('✅').catch(logger.error)
+    }
+
+    protected crossReactMessage(message: Message) {
+        message.react('❎').catch(logger.error)
     }
 
     getName(): string {
