@@ -72,7 +72,7 @@ export class BeeBot {
 
     handleMessage(message: DiscordClient.Message): void {
         this.registeredCommands.forEach((c) => {
-            if (message.content.toLowerCase().startsWith(c.getTrigger())) {
+            if (message.content.toLowerCase().match(c.getTrigger())) {
                 logger.info(`Executing command ${c.getName()}`)
                 c.execute(message)
                     .then(() => logger.info(`Command executed ${c.getName()}`))

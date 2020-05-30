@@ -1,14 +1,14 @@
 import * as DiscordClient from 'discord.js'
 import {BaseCommand, Command} from '../command'
 
-const COMMAND_STRING = 'help'
+const COMMAND_STRING = /^bee!help$/
 const NAME = 'bee!help'
 const DESCRIPTION = 'Displays this help text'
 
 @Command.register
 export class Echo extends BaseCommand {
     constructor() {
-        super(NAME, true, COMMAND_STRING, DESCRIPTION)
+        super(NAME, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {

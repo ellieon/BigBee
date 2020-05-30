@@ -3,7 +3,7 @@ import {BaseCommand, Command} from '../command'
 import {SpotifyHelper} from "../../../common/spotifyHelper";
 import * as logger from 'winston'
 
-const COMMAND_STRING = 'search'
+const COMMAND_STRING = /^bee!search(?:\s(?<songName>.+))?$/
 const NAME = "bee!search search <song name>"
 const DESCRIPTION = 'Searches for a song on Spotify and echoes the result'
 
@@ -12,11 +12,11 @@ export class Search extends BaseCommand {
 
     private readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
     constructor() {
-        super(NAME, true, COMMAND_STRING, DESCRIPTION)
+        super(NAME, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
-        const params: string = this.getParams(message)
+        const params = message.content.match(COMMAND_STRING).groups.songName
 
         console.log(params)
         if (!params || params.length === 0) {

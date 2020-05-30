@@ -5,10 +5,9 @@ import {DatabaseHelper, UserID} from "../../../common/database";
 
 import * as logger from "winston";
 
-const COMMAND_STRING = 'queue'
 const NAME = "bee!queue [user] <song_name>"
 const DESCRIPTION = 'Searches for and adds it to a play queue'
-const USER_CAPTURE = /<@!?(?<userid>\d{17,19})>/
+const COMMAND_STRING: RegExp = /^bee!queue(?:\s<@!(?<userId>\d{17,19})>?)?(?:\s(?<songName>.+))?$/
 
 
 @Command.register
@@ -17,27 +16,27 @@ export class QueueSong extends BaseCommand {
     readonly db: DatabaseHelper = new DatabaseHelper()
 
     constructor() {
-        super(NAME, true, COMMAND_STRING, DESCRIPTION)
+        super(NAME, COMMAND_STRING, DESCRIPTION)
     }
 
     async execute(message: DiscordClient.Message): Promise<void> {
-        const params: string = message.content.substr(this.getTrigger().length, message.content.length)
-        await this.findAndPlay(message, params)
+        await this.findAndPlay(message)
     }
 
-    async findAndPlay(message: DiscordClient.Message, params: string) {
-        if (params.length === 0) {
+    async findAndPlay(message: DiscordClient.Message) {
+        const matches = message.content.match(COMMAND_STRING)
+
+        const songName = matches.groups.songName
+
+        if (!matches || !songName || songName.length === 0) {
             message.channel.send("I need a song name to search `bee!queue [search_term]`").catch(logger.error)
             return
         }
 
-        let matches = params.match(USER_CAPTURE)
-
         let users: UserID[] 
-        if(matches) {
-            console.log(matches.groups.userid)
-            users = [{user_id: matches.groups.userid}]
-            params = params.replace(matches[0], "")
+        if(matches.groups.userId) {
+            console.log(matches.groups.userId)
+            users = [{user_id: matches.groups.userId}]
         } else {
             users = await this.db.getAllUserIds()
         }
@@ -52,7 +51,7 @@ export class QueueSong extends BaseCommand {
             const userId: string = users[i].user_id
 
             if (!uri) {
-                const trackData = await this.helper.searchForTrack(params, userId)
+                const trackData = await this.helper.searchForTrack(songName, userId)
 
                 if (!trackData) {
                     message.channel.send("I was unable to connect to spotify to search for tracks").catch(logger.error)
@@ -63,7 +62,7 @@ export class QueueSong extends BaseCommand {
                 const tracks = trackData.body.tracks.items
 
                 if (tracks.length === 0) {
-                    message.channel.send("I was unable to find any tracks by the name" + params).catch(logger.error)
+                    message.channel.send("I was unable to find any tracks by the name" + songName).catch(logger.error)
                     this.crossReactMessage(message)
                     return
                 }

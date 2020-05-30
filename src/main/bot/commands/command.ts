@@ -3,7 +3,7 @@ import * as requireDirectory from 'require-directory'
 import * as path from 'path'
 import {Message} from "discord.js";
 import {BeeBot} from "../bot";
-import {EnvironmentHelper} from "../../common/environmentHelper";
+//import {EnvironmentHelper} from "../../common/environmentHelper";
 import * as logger from 'winston'
 
 export namespace Command {
@@ -38,6 +38,8 @@ export namespace Command {
 
 export abstract class BaseCommand {
 
+   // private static readonly PREFIX: string = EnvironmentHelper.isDevelopmentMode() ? 'dbee!' : 'bee!'
+
     public static readonly EVERYONE_PATTERN = /@(everyone|here)/;
 
     public static readonly USERS_PATTERN = /<@!?(\d{17,19})>/;
@@ -51,34 +53,16 @@ export abstract class BaseCommand {
 
     protected constructor(
         private name: string,
-        private prefixRequired: boolean,
-        private commandString: string,
+        private commandString: RegExp,
         private description?: string,
-        private readonly PREFIX: string = EnvironmentHelper.isDevelopmentMode() ? 'dbee!' : 'bee!'
+
     ) {
     }
 
     abstract async execute(message: DiscordClient.Message): Promise<void>
 
-    getTrigger() : string {
-        if (this.prefixRequired) {
-            return `${this.PREFIX}${this.commandString}`
-
-        } else {
-            return this.commandString
-        }
-    }
-
-    getParams(message: Message): string {
-        if(!message) {
-            return undefined
-        }
-        const content = message.content
-        if (this.prefixRequired && content.length > this.getTrigger().length + 1) {
-            return message.content.substr(this.getTrigger().length + 1, message.content.length)
-        } else {
-            return ""
-        }
+    getTrigger() : RegExp {
+        return this.commandString
     }
 
     public setClient(client: DiscordClient.Client) {
