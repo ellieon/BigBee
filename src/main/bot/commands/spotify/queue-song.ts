@@ -8,7 +8,7 @@ import * as logger from "winston";
 const COMMAND_STRING = 'queue'
 const NAME = "bee!queue [user] <song_name>"
 const DESCRIPTION = 'Searches for and adds it to a play queue'
-const USER_CAPTURE = /<@!?(\d{17,19})>/
+const USER_CAPTURE = /<@!?(?<userid>\d{17,19})>/
 
 
 @Command.register
@@ -33,9 +33,10 @@ export class QueueSong extends BaseCommand {
 
         let matches = params.match(USER_CAPTURE)
 
-        let users: UserID[]
-        if(matches && matches.length > 1) {
-            users = [{user_id: matches[1]}]
+        let users: UserID[] 
+        if(matches) {
+            console.log(matches.groups.userid)
+            users = [{user_id: matches.groups.userid}]
             params = params.replace(matches[0], "")
         } else {
             users = await this.db.getAllUserIds()
