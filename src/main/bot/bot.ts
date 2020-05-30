@@ -71,6 +71,9 @@ export class BeeBot {
     }
 
     handleMessage(message: DiscordClient.Message): void {
+        if (message.author.id === this.bot.user.id)
+            return
+
         this.registeredCommands.forEach((c) => {
             if (message.content.toLowerCase().match(c.getTrigger())) {
                 logger.info(`Executing command ${c.getName()}`)
