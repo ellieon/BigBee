@@ -86,5 +86,7 @@ export class QueueSong extends BaseCommand {
                 .catch(console.log)
         }
 
+        this.checkReactMessage(message)
+
     }
 }
