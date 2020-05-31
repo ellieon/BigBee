@@ -59,6 +59,10 @@ export abstract class BaseCommand {
 
   abstract async execute (message: Message): Promise<void>
 
+  checkTrigger (message: Message): boolean {
+    return !!message.content.toLowerCase().match(this.getTrigger())
+  }
+
   getTrigger (): RegExp {
     return this.commandString
   }
