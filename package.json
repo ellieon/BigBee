@@ -6,6 +6,7 @@
   "dependencies": {
     "@types/node": "^14.0.5",
     "cookie-parser": "^1.4.5",
+    "cross-env": "^7.0.2",
     "db-migrate": "^0.11.11",
     "db-migrate-pg": "^1.2.2",
     "discord-oauth2": "^2.2.0",
@@ -27,7 +28,7 @@
     "postinstall": "npm run build",
     "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts",
     "lint": "tsc --noEmit && tslint --project tsconfig.json",
-    "test": "ts-mocha -r tsconfig-paths/register -p tsconfig.json src/**/*.spec.ts"
+    "test": "cross-env NODE_ENV=test ts-mocha -r tsconfig-paths/register -p tsconfig.json src/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",

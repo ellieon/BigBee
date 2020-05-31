@@ -12,7 +12,9 @@ export class BeeBot {
   async init (client: DiscordClient.Client) {
     this.bot = client
     logger.remove(logger.transports.Console)
-    logger.add(new logger.transports.Console(), {
+    logger.add(new logger.transports.Console({
+      silent: process.env.NODE_ENV === 'test'
+    }), {
       colorize: true
     })
 

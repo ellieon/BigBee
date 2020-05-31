@@ -10,7 +10,6 @@ describe('Help Command', function () {
   beforeEach(async () => {
     help = new Help()
     const bot: BeeBot = await DiscordTestHelper.createBot()
-
     help.setBot(bot)
     help.setClient(bot.getClient())
   })
