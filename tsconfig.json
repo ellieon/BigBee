@@ -12,7 +12,8 @@
     "skipLibCheck": true,
     "lib": [
       "ES2018.Regexp",
-      "dom"
+      "dom",
+      "es2015.collection"
     ]
   }
 }

@@ -2,12 +2,15 @@ import * as DiscordClient from 'discord.js'
 import { EnvironmentHelper, EnvironmentHelper as env } from 'common/environmentHelper'
 import { BaseCommand, Command } from 'bot/commands/command'
 import { BotExtension, Extension } from 'bot/extensions/botExtension'
+import { GuildSettings } from 'bot/common/guild/guildSettings'
+import { GuildSettingsManager } from 'bot/common/guild/guildSettingsManager'
 
 const logger = require('winston')
 
 export class BeeBot {
   private bot: DiscordClient.Client
   private registeredCommands: BaseCommand[] = []
+  private settingsManager: GuildSettingsManager
 
   async init (client: DiscordClient.Client) {
     this.bot = client
@@ -20,6 +23,7 @@ export class BeeBot {
 
     logger.level = EnvironmentHelper.getLoggingLevel()
     logger.info(`Log level set to ${EnvironmentHelper.getLoggingLevel()}`)
+    this.settingsManager = GuildSettingsManager.getInstance()
 
     this.bot.on('ready', () => {
       logger.info('Connected')
@@ -34,6 +38,15 @@ export class BeeBot {
     this.bot.on('message', (message) => {
       this.handleMessage(message)
     })
+
+    this.bot.on('guildCreate', (guild: DiscordClient.Guild) => {
+      logger.info(`Joined guild with id ${guild.id}`)
+      let guildSettings: GuildSettings = new GuildSettings()
+      guildSettings.id = guild.id
+      this.settingsManager.saveGuild(guildSettings)
+    })
+
+    //this.bot.on('guildDelete', ())
 
     await this.bot.login(env.getDiscordBotToken())
 
@@ -75,17 +88,22 @@ export class BeeBot {
   }
 
   handleMessage (message: DiscordClient.Message): void {
-    if (message.author.id === this.bot.user.id) {
-      return
-    }
+    try {
 
-    this.registeredCommands.forEach((c) => {
-      if (c.checkTrigger(message)) {
-        logger.info(`Executing command ${c.getName()}`)
-        c.execute(message)
-          .then(() => logger.info(`Command executed ${c.getName()}`))
-          .catch(logger.error)
+      if (message.author.id === this.bot.user.id) {
+        return
       }
-    })
+
+      this.registeredCommands.forEach((c) => {
+        if (c.checkTrigger(message)) {
+          logger.info(`Executing command ${c.getName()}`)
+          c.execute(message)
+            .then(() => logger.info(`Command executed ${c.getName()}`))
+            .catch(logger.error)
+        }
+      })
+    } catch (err) {
+      logger.error(err)
+    }
   }
 }

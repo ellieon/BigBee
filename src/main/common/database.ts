@@ -1,5 +1,6 @@
 import { EnvironmentHelper as env } from 'common/environmentHelper'
 import * as logger from 'winston'
+import { GuildSettings } from 'bot/common/guild/guildSettings'
 
 const Pool = require('pg').Pool
 
@@ -22,12 +23,22 @@ export class DatabaseHelper {
   private static readonly CREATE_UPDATE: string = `
     INSERT INTO spotify_connections VALUES ($1, $2, $3, $4)
         ON CONFLICT (user_id) DO
-        UPDATE SET connection_token = $2, refresh_token = $3, expires = $4
-   `
+        UPDATE SET connection_token = $2, refresh_token = $3, expires = $4`
+
   private static readonly GET_KEY: string =
       `SELECT connection_token, refresh_token, expires FROM spotify_connections WHERE user_id=$1`
+
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
+
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
+
+  private static readonly SAVE_GUILD: string = `INSERT INTO guild_settings VALUES ($1, $2)
+        ON CONFLICT (guild_id) DO
+        UPDATE SET  settings = $2`
+
+  private static readonly GET_GUILD: string = `SELECT settings from guild_settings WHERE guild_id=$1`
+
+  private static readonly GET_GUILDS: string = 'SELECT settings from guild_settings'
 
   readonly pool = new Pool({
     connectionString: env.getDatabaseURL()
@@ -70,6 +81,24 @@ export class DatabaseHelper {
 
   async deleteUser (userId: string) {
     return this.pool.query(DatabaseHelper.DELETE_USERS, [userId]).catch(logger.error)
+  }
+
+  async saveGuildSettings (guildSettings: GuildSettings) {
+    return this.pool.query(DatabaseHelper.SAVE_GUILD, [guildSettings.id, JSON.stringify(guildSettings)])
+  }
+
+  async getGuildSettings (guildId: string) {
+    const rows = await this.pool.query(DatabaseHelper.GET_GUILD, [guildId])
+    if (rows.length > 0) {
+      return JSON.parse(rows[0].settings)
+    } else {
+      return undefined
+    }
+  }
+
+  async getAllGuildSettings (): Promise<any> {
+    logger.info('Getting all guilds')
+    return this.pool.query(DatabaseHelper.GET_GUILDS)
   }
 
 }
