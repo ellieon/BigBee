@@ -23,7 +23,7 @@ export class BeeBot {
       logger.info(`Environment = ${env.getEnvironment()}`)
       logger.info(`Debug channel = ${env.getDebugChannelName()}`)
       this.bot.user.setPresence({
-        activity: { name: "Everybody knows it's big dick bee! " },
+        activity: { name: 'Everybody knows it\'s big dick bee! ' },
         status: 'online'
       }).catch(logger.error)
     })
@@ -68,6 +68,9 @@ export class BeeBot {
   }
 
   handleMessage (message: DiscordClient.Message): void {
+    if (message.author.id === this.bot.user.id)
+      return
+
     this.registeredCommands.forEach((c) => {
       if (message.content.toLowerCase().match(c.getTrigger())) {
         logger.info(`Executing command ${c.getName()}`)
@@ -77,5 +80,4 @@ export class BeeBot {
       }
     })
   }
-
 }
