@@ -6,12 +6,15 @@ import { BotExtension, Extension } from 'bot/extensions/botExtension'
 const logger = require('winston')
 
 export class BeeBot {
-  readonly bot = new DiscordClient.Client()
+  private bot: DiscordClient.Client
   private registeredCommands: BaseCommand[] = []
 
-  init () {
+  async init (client: DiscordClient.Client) {
+    this.bot = client
     logger.remove(logger.transports.Console)
-    logger.add(new logger.transports.Console(), {
+    logger.add(new logger.transports.Console({
+      silent: process.env.NODE_ENV === 'test'
+    }), {
       colorize: true
     })
 
@@ -32,7 +35,7 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
-    this.bot.login(env.getDiscordBotToken()).then(logger.info('Bot login successful'))
+    await this.bot.login(env.getDiscordBotToken())
 
     this.addCommands()
     this.addExtensions()
@@ -54,6 +57,10 @@ export class BeeBot {
     return this.registeredCommands
   }
 
+  getClient (): DiscordClient.Client {
+    return this.bot
+  }
+
   addExtension (extension: BotExtension) {
     logger.info(`Initialising extension ${extension.getName()}`)
     extension.setClient(this.bot)
@@ -73,7 +80,7 @@ export class BeeBot {
     }
 
     this.registeredCommands.forEach((c) => {
-      if (message.content.toLowerCase().match(c.getTrigger())) {
+      if (c.checkTrigger(message)) {
         logger.info(`Executing command ${c.getName()}`)
         c.execute(message)
           .then(() => logger.info(`Command executed ${c.getName()}`))

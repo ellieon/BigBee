@@ -1,8 +1,7 @@
 import * as requireDirectory from 'require-directory'
 import * as path from 'path'
+import { BeeBot } from '../bot'
 import { Message, Client } from 'discord.js'
-import { BeeBot } from 'bot/bot'
-import * as logger from 'winston'
 
 export namespace Command {
   const fileExtension: string = path.extname(__filename).slice(1)
@@ -60,6 +59,10 @@ export abstract class BaseCommand {
 
   abstract async execute (message: Message): Promise<void>
 
+  checkTrigger (message: Message): boolean {
+    return !!message.content.toLowerCase().match(this.getTrigger())
+  }
+
   getTrigger (): RegExp {
     return this.commandString
   }
@@ -88,11 +91,11 @@ export abstract class BaseCommand {
     return this.description
   }
 
-  protected checkReactMessage (message: Message) {
-    message.react('✅').catch(logger.error)
+  protected async checkReactMessage (message: Message) {
+    await message.react('✅')
   }
 
-  protected crossReactMessage (message: Message) {
-    message.react('❎').catch(logger.error)
+  protected async crossReactMessage (message: Message) {
+    await message.react('❎')
   }
 }

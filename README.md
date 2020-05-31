@@ -52,9 +52,9 @@ A list of commands can be obtained by messaging `bee!help` to the bot user.
 
 ## TODO
 This bot is in very early stages of development, so the following features are planned:
-- An actual proper frontend
+- An actual proper frontend for Spotify connection
+- Guild management
 - A bunch of other commands (Who knows yet)
-- Regex command matching
-- Clean up the code, I wrote this in a massive rush and am not happy with it in the slightest.
+
 
 

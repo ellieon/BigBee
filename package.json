@@ -1,49 +1,59 @@
 {
-    "name": "big-dick-bee",
-    "version": "1.0.0",
-    "description": "Everybody knows it's big dick bee!",
-    "author": "Ellie Harrison",
-    "dependencies": {
-        "@types/node": "^14.0.5",
-        "cookie-parser": "^1.4.5",
-        "db-migrate": "^0.11.11",
-        "db-migrate-pg": "^1.2.2",
-        "discord-oauth2": "^2.2.0",
-        "discord.js": "^12.2.0",
-        "express": "^4.17.1",
-        "jsonwebtoken": "^8.5.1",
-        "pg": "^8.2.1",
-        "request": "^2.88.2",
-        "spotify-web-api-node": "^4.0.0",
-        "ts-node": "^8.10.1",
-        "ts-node-dev": "^1.0.0-pre.32",
-        "tsconfig-paths": "^3.9.0",
-        "tslint-microsoft-contrib": "^6.2.0",
-        "typescript": "^3.9.3",
-        "winston": "^3.2.1"
-    },
-    "scripts": {
-        "start": "db-migrate up && node -r tsconfig-paths/register server.js --trace-warnings",
-        "build": "tsc",
-        "build_start": "npm run build && npm run start",
-        "clean": "tsc --build --clean",
-        "postinstall": "npm run build",
-        "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts",
-        "lint": "tsc --noEmit && tslint --project tsconfig.json"
-    },
-    "devDependencies": {
-        "husky": "^4.2.5",
-        "tslint": "^6.1.2",
-        "tslint-config-standard": "^9.0.0"
-    },
-    "engines": {
-        "node": ">=12.0.10"
-    },
-    "engineStrict": true,
-    "husky": {
-        "hooks": {
-            "pre-commit": "npm run lint"
-        }
+  "name": "big-dick-bee",
+  "version": "1.0.0",
+  "description": "Everybody knows it's big dick bee!",
+  "author": "Ellie Harrison",
+  "dependencies": {
+    "@types/node": "^14.0.5",
+    "cookie-parser": "^1.4.5",
+    "cross-env": "^7.0.2",
+    "db-migrate": "^0.11.11",
+    "db-migrate-pg": "^1.2.2",
+    "discord-oauth2": "^2.2.0",
+    "discord.js": "^12.2.0",
+    "express": "^4.17.1",
+    "jsonwebtoken": "^8.5.1",
+    "pg": "^8.2.1",
+    "request": "^2.88.2",
+    "spotify-web-api-node": "^4.0.0",
+    "ts-node": "^8.10.1",
+    "typescript": "^3.9.3",
+    "winston": "^3.2.1"
+  },
+  "scripts": {
+    "start": "db-migrate up && node -r tsconfig-paths/register server.js --trace-warnings",
+    "build": "tsc",
+    "build_start": "npm run build && npm run start",
+    "clean": "tsc --build --clean",
+    "postinstall": "npm run build",
+    "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts",
+    "lint": "tsc --noEmit && tslint --project tsconfig.json",
+    "test": "cross-env NODE_ENV=test ts-mocha -r tsconfig-paths/register -p tsconfig.json src/**/*.spec.ts"
+  },
+  "devDependencies": {
+    "@types/chai": "^4.2.11",
+    "@types/mocha": "^7.0.2",
+    "chai": "^4.2.0",
+    "husky": "^4.2.5",
+    "mocha": "^7.2.0",
+    "mock-discordjs": "^0.2.0",
+    "sinon": "^9.0.2",
+    "sinon-chai": "^3.5.0",
+    "ts-mocha": "^7.0.0",
+    "ts-node-dev": "^1.0.0-pre.32",
+    "tsconfig-paths": "^3.9.0",
+    "tslint": "^6.1.2",
+    "tslint-config-standard": "^9.0.0",
+    "tslint-microsoft-contrib": "^6.2.0"
+  },
+  "engines": {
+    "node": ">=12.0.10"
+  },
+  "engineStrict": true,
+  "husky": {
+    "hooks": {
+      "pre-commit": "npm run lint",
+      "pre-push": "npm run test"
     }
-
+  }
 }
