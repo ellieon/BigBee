@@ -15,7 +15,7 @@ export class Echo extends BaseCommand {
         await message.channel.send('BIG')
         await message.channel.send('DICK')
         await message.channel.send('BEE')
-        this.checkReactMessage(message)
+        await this.checkReactMessage(message)
     }
 
 }
