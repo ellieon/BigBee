@@ -26,6 +26,16 @@ describe('Help Command', function () {
       const message = DiscordTestHelper.createMockMessage('Does not contain the trigger')
       assert.isFalse(help.checkTrigger(message))
     })
+
+    it('when message contains bee!help at the start', async function () {
+      const message = DiscordTestHelper.createMockMessage('bee!help some stuff that should fail this')
+      assert.isFalse(help.checkTrigger(message))
+    })
+
+    it('when message contains bee!help', async function () {
+      const message = DiscordTestHelper.createMockMessage('some stuff bee!help some stuff that should fail this')
+      assert.isFalse(help.checkTrigger(message))
+    })
   })
 
   it('should output the correct messages when the trigger is hit', async function () {
