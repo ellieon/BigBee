@@ -18,6 +18,7 @@
         "ts-node": "^8.10.1",
         "ts-node-dev": "^1.0.0-pre.32",
         "tsconfig-paths": "^3.9.0",
+        "tslint-microsoft-contrib": "^6.2.0",
         "typescript": "^3.9.3",
         "winston": "^3.2.1"
     },
@@ -25,11 +26,14 @@
         "start": "db-migrate up && node -r tsconfig-paths/register server.js --trace-warnings",
         "build": "tsc",
         "build_start": "npm run build && npm run start",
+        "clean": "tsc --build --clean",
         "postinstall": "npm run build",
-        "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts"
+        "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts",
+        "lint": "tsc --noEmit && tslint --project tsconfig.json"
     },
     "devDependencies": {
-        "tslint": "^6.1.2"
+        "tslint": "^6.1.2",
+        "tslint-config-standard": "^9.0.0"
     },
     "engines": {
         "node": ">=12.0.10"
