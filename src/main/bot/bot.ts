@@ -9,7 +9,7 @@ export class BeeBot {
   private bot: DiscordClient.Client
   private registeredCommands: BaseCommand[] = []
 
-  init (client: DiscordClient.Client) {
+  async init (client: DiscordClient.Client) {
     this.bot = client
     logger.remove(logger.transports.Console)
     logger.add(new logger.transports.Console(), {
@@ -33,7 +33,7 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
-    this.bot.login(env.getDiscordBotToken()).then(logger.info('Bot login successful'))
+    await this.bot.login(env.getDiscordBotToken())
 
     this.addCommands()
     this.addExtensions()
@@ -53,6 +53,10 @@ export class BeeBot {
 
   getCommands (): BaseCommand[] {
     return this.registeredCommands
+  }
+
+  getClient (): DiscordClient.Client {
+    return this.bot
   }
 
   addExtension (extension: BotExtension) {

@@ -1,13 +1,12 @@
 import * as DiscordClient from 'discord.js'
 import { BaseCommand, Command } from 'bot/commands/command'
-import * as logger from 'winston'
 
 const COMMAND_STRING = /^bee!help$/
 const NAME = 'bee!help'
 const DESCRIPTION = 'Displays this help text'
 
 @Command.register
-export class Echo extends BaseCommand {
+export class Help extends BaseCommand {
   constructor () {
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
@@ -21,8 +20,8 @@ export class Echo extends BaseCommand {
 
     helpText += '```'
 
-    message.channel.send(helpText).catch(logger.error)
-    this.checkReactMessage(message)
+    await message.channel.send(helpText)
+    await this.checkReactMessage(message)
   }
 
 }

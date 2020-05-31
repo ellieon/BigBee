@@ -1,13 +1,12 @@
 import { Echo } from 'bot/commands/general/echo'
 import * as sinon from 'sinon'
 import { assert } from 'chai'
-import { Message, TextChannel } from 'discord.js'
+import { DiscordTestHelper } from '../../../helper/discordTestingHelper'
 
 describe('Echo Command', function () {
   let echo: Echo
 
   beforeEach(() => {
-
     echo = new Echo()
   })
 
@@ -27,13 +26,13 @@ describe('Echo Command', function () {
 
   describe('Should not trigger', function () {
     it('when message does not contain "big dick bee"', async function () {
-      const message = createMockMessage('Does not contain the trigger')
+      const message = DiscordTestHelper.createMockMessage('Does not contain the trigger')
       assert.isFalse(echo.checkTrigger(message))
     })
   })
 
   it('should output the correct messages when the trigger is hit', async function () {
-    const message = createMockMessage('big dick bee')
+    const message = DiscordTestHelper.createMockMessage('big dick bee')
     await echo.execute(message)
     sinon.assert.calledThrice(message.channel.send)
     sinon.assert.calledWith(message.channel.send, 'BIG')
@@ -42,17 +41,8 @@ describe('Echo Command', function () {
   })
 
   async function checkAndAssertMatches (content: string) {
-    const message = createMockMessage(content)
+    const message = DiscordTestHelper.createMockMessage(content)
     assert(echo.checkTrigger(message))
   }
 
-  function createMockMessage (content: string) {
-    let message: Message = sinon.createStubInstance(Message)
-    message.content = content
-    message.channel = sinon.createStubInstance(TextChannel)
-    message.channel.send = sinon.spy()
-
-    return message
-
-  }
 })
