@@ -1,8 +1,8 @@
 import * as express from 'express'
 import {EnvironmentHelper, EnvironmentHelper as env} from "../../common/environmentHelper";
-import {DatabaseHelper} from "../../common/database";
-import {DiscordMiddleware} from "../common/discordMiddleware";
-import {DiscordHelper} from "../../common/discordHelper";
+import {DatabaseHelper} from "common/database";
+import {DiscordMiddleware} from "web/common/discordMiddleware";
+import {DiscordHelper} from "common/discordHelper";
 
 
 const scopes = [

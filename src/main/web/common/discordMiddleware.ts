@@ -1,6 +1,6 @@
 
-import {JwtHelper} from "./jwtHelper";
-import {EnvironmentHelper} from "../../common/environmentHelper";
+import {JwtHelper} from "web/common/jwtHelper";
+import {EnvironmentHelper} from "common/environmentHelper";
 
 export class DiscordMiddleware {
     static createHandler(callback: string) {

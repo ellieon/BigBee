@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {BaseCommand} from '../command'
-import {DatabaseHelper, UserID} from "../../../common/database";
-import {SpotifyHelper} from "../../../common/spotifyHelper";
+import {DatabaseHelper, UserID} from "common/database";
+import {SpotifyHelper} from "common/spotifyHelper";
 
 const COMMAND_STRING = /^bee!skip$/
 const NAME = 'skip'

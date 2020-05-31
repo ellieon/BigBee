@@ -1,5 +1,5 @@
-import {DatabaseHelper, SpotifyConnection} from "./database";
-import {EnvironmentHelper as env} from "./environmentHelper";
+import {DatabaseHelper, SpotifyConnection} from "common/database";
+import {EnvironmentHelper as env} from "common/environmentHelper";
 import * as SpotifyWebApi from 'spotify-web-api-node'
 import * as request from 'request'
 import * as logger from 'winston'

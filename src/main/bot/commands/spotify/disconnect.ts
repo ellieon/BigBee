@@ -1,6 +1,6 @@
 import * as DiscordClient from 'discord.js'
-import {Command, BaseCommand} from '../command'
-import {DatabaseHelper} from "../../../common/database";
+import {Command, BaseCommand} from 'bot/commands/command'
+import {DatabaseHelper} from "common/database";
 import * as logger from 'winston'
 
 const COMMAND_STRING = /^bee!disconnect$/

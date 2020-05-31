@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
-import {BaseCommand, Command} from '../command'
-import {SpotifyHelper} from "../../../common/spotifyHelper";
-import {DatabaseHelper, UserID} from "../../../common/database";
+import {BaseCommand, Command} from 'bot/commands/command'
+import {SpotifyHelper} from "common/spotifyHelper";
+import {DatabaseHelper, UserID} from "common/database";
 
 import * as logger from "winston";
 

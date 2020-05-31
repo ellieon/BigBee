@@ -1,6 +1,6 @@
 import * as express from 'express'
-import {EnvironmentHelper as env} from "./../../common/environmentHelper";
-import {JwtHelper} from "../common/jwtHelper";
+import {EnvironmentHelper as env} from "common/environmentHelper";
+import {JwtHelper} from "web/common/jwtHelper";
 const DiscordOauth2 = require('discord-oauth2')
 
 const oauth = new DiscordOauth2({

@@ -1,6 +1,6 @@
 import * as DiscordClient from 'discord.js'
-import {BaseCommand, Command} from '../command'
-import {SpotifyHelper} from "../../../common/spotifyHelper";
+import {BaseCommand, Command} from 'bot/commands/command'
+import {SpotifyHelper} from "common/spotifyHelper";
 import * as logger from 'winston'
 
 const COMMAND_STRING = /^bee!search(?:\s(?<songName>.+))?$/

@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import {Command, BaseCommand} from '../command'
 import * as logger from 'winston'
-import {EnvironmentHelper} from "../../../common/environmentHelper";
+import {EnvironmentHelper} from "common/environmentHelper";
 
 const COMMAND_STRING = /^bee!connect$/
 const NAME = 'bee!connect'

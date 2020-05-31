@@ -1,4 +1,4 @@
-import {EnvironmentHelper as env} from "./environmentHelper";
+import {EnvironmentHelper as env} from "common/environmentHelper";
 import * as logger from 'winston'
 
 const Pool = require('pg').Pool

@@ -1,7 +1,7 @@
 import * as express from 'express'
-import {EnvironmentHelper} from "../../common/environmentHelper";
-import {DatabaseHelper, SpotifyConnection} from "../../common/database";
-import {DiscordHelper} from "../../common/discordHelper";
+import {EnvironmentHelper} from "common/environmentHelper";
+import {DatabaseHelper, SpotifyConnection} from "common/database";
+import {DiscordHelper} from "common/discordHelper";
 
 export class SpotifyMiddleware {
     static async requestHandler (req: express.Request, res: express.Response, next: express.NextFunction) {

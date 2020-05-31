@@ -1,4 +1,4 @@
-import {EnvironmentHelper as env} from "./environmentHelper";
+import {EnvironmentHelper as env} from "common/environmentHelper";
 const DiscordOauth2 = require('discord-oauth2')
 import * as logger from 'winston'
 

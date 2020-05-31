@@ -1,8 +1,8 @@
 import {GuildMember, PartialGuildMember, TextChannel} from "discord.js";
-import {BotExtension, Extension} from "./botExtension";
+import {BotExtension, Extension} from "bot/extensions/botExtension";
 import * as logger from 'winston'
-import {EnvironmentHelper} from "../../common/environmentHelper";
-import {format} from '../../common/stringUtils'
+import {EnvironmentHelper} from "common/environmentHelper";
+import {format} from 'common/stringUtils'
 
 @Extension.register
 export class Greeter extends BotExtension{

@@ -1,7 +1,7 @@
 import * as express from "express/lib/express";
-import spotify from "./routes/spotify";
-import discord from "./routes/discord";
-import index from "./routes/"
+import spotify from "web/routes/spotify";
+import discord from "web/routes/discord";
+import index from "web/routes/"
 import * as cookieParser from 'cookie-parser'
 
 

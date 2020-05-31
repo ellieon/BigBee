@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
-import {EnvironmentHelper, EnvironmentHelper as env} from "../common/environmentHelper";
-import {BaseCommand, Command} from "./commands/command";
-import {BotExtension, Extension} from "./extensions/botExtension";
+import {EnvironmentHelper, EnvironmentHelper as env} from 'common/environmentHelper'
+import {BaseCommand, Command} from "bot/commands/command";
+import {BotExtension, Extension} from "bot/extensions/botExtension";
 
 const logger = require('winston');
 

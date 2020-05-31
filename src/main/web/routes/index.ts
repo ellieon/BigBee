@@ -1,7 +1,7 @@
 import * as express from 'express'
-import {DiscordMiddleware} from "../common/discordMiddleware";
-import {SpotifyMiddleware} from "../common/SpotifyMiddleware";
-import {EnvironmentHelper} from "../../common/environmentHelper";
+import {DiscordMiddleware} from "web/common/discordMiddleware";
+import {SpotifyMiddleware} from "web/common/SpotifyMiddleware";
+import {EnvironmentHelper} from "common/environmentHelper";
 
 
 export default express.Router()
