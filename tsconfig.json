@@ -1,13 +1,18 @@
 {
   "compilerOptions": {
-    "alwaysStrict": true,
+    "baseUrl": "./src",
+    "paths": {
+      "web/*": ["main/web/*"],
+      "common/*": ["main/common/*"],
+      "bot/*": ["main/bot/*"]
+    },
+    "alwaysStrict": false,
     "noUnusedLocals": true,
     "experimentalDecorators": true,
     "skipLibCheck": true,
     "lib": [
       "ES2018.Regexp",
       "dom"
-    ],
-    "outDir": "build"
+    ]
   }
 }
