@@ -27,7 +27,7 @@ export class GuildSettingsManager {
     await this.dbHelper.saveGuildSettings(guildSettings)
   }
 
-  public getGuild(id: string): GuildSettings {
+  public getGuild (id: string): GuildSettings {
     return this.cache[id]
   }
 

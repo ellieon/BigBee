@@ -46,7 +46,7 @@ export class BeeBot {
       this.settingsManager.saveGuild(guildSettings)
     })
 
-    //this.bot.on('guildDelete', ())
+    // this.bot.on('guildDelete', ())
 
     await this.bot.login(env.getDiscordBotToken())
 
