@@ -1,7 +1,7 @@
-export function format(string: string, ...args: string[]): string{
-        return string.replace(/{(\d+)}/g, function(match, number) {
-            return typeof args[number] != undefined
-                ? args[number]
-                : match
-        })
-    }
+export function format (input: string, ...args: string[]): string {
+  return input.replace(/{(\d+)}/g, function (match, index) {
+    return typeof args[index] !== undefined
+      ? args[index]
+      : match
+  })
+}

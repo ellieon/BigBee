@@ -1,8 +1,6 @@
-import * as Discord from 'discord.js'
-import { Echo } from '../../../../main/bot/commands/general/echo'
+import { Echo } from 'bot/commands/general/echo'
 import * as sinon from 'sinon'
-import { Message } from 'discord.js'
-
+import { Message, TextChannel } from 'discord.js'
 
 describe('Echo Command', function () {
   let echo: Echo
@@ -31,7 +29,6 @@ describe('Echo Command', function () {
     })
   })
 
-
   async function executeAndAssertPositive (content: string) {
     const message = createMockMessage(content)
     await echo.execute(message)
@@ -42,11 +39,10 @@ describe('Echo Command', function () {
   }
 
   function createMockMessage (content: string) {
-    let message: Message = sinon.createStubInstance(Discord.Message)
+    let message: Message = sinon.createStubInstance(Message)
     message.content = content
-    message.channel = sinon.createStubInstance(Discord.TextChannel)
+    message.channel = sinon.createStubInstance(TextChannel)
     message.channel.send = sinon.spy()
-
 
     return message
 
