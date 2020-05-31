@@ -1,32 +1,32 @@
 import * as jwt from 'jsonwebtoken'
-import {Request, Response} from 'express'
+import { Request, Response } from 'express'
+import * as logger from 'winston'
 
 export class JwtHelper {
 
-    private static readonly jwtKey: string = "SUPER_SECRET_KEY"
-    private static readonly jwtExpiry: number = 300
+  private static readonly jwtKey: string = 'SUPER_SECRET_KEY'
+  private static readonly jwtExpiry: number = 300
 
-    static createBearerToken(bearerToken: string): any {
-        return jwt.sign({bearerToken}, this.jwtKey, {
-            algorithm: 'HS256',
-            expiresIn: this.jwtExpiry
-        })
-    }
+  static createBearerToken (bearerToken: string): any {
+    return jwt.sign({ bearerToken }, this.jwtKey, {
+      algorithm: 'HS256',
+      expiresIn: this.jwtExpiry
+    })
+  }
 
-    static readBearerTokenFromRequest(req: Request): string {
-        try {
-            const token = jwt.verify(req.cookies.SESSION_ID, this.jwtKey)
-            return token.bearerToken
-        } catch (e) {
-            if(e instanceof jwt.JsonWebTokenError) {
-                console.log("Invalid JWT Token")
-            } else {
-            }
-            return undefined
-        }
+  static readBearerTokenFromRequest (req: Request): string {
+    try {
+      const token = jwt.verify(req.cookies.SESSION_ID, this.jwtKey)
+      return token.bearerToken
+    } catch (e) {
+      if (e instanceof jwt.JsonWebTokenError) {
+        logger.info('Invalid JWT Token')
+      }
+      return undefined
     }
+  }
 
-    static saveBearerTokenToCookie(res: Response, token: any) {
-        res.cookie("SESSION_ID", token, { maxAge: this.jwtExpiry * 1000})
-    }
+  static saveBearerTokenToCookie (res: Response, token: any) {
+    res.cookie('SESSION_ID', token, { maxAge: this.jwtExpiry * 1000 })
+  }
 }
