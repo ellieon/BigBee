@@ -18,7 +18,8 @@
     "spotify-web-api-node": "^4.0.0",
     "ts-node": "^8.10.1",
     "typescript": "^3.9.3",
-    "winston": "^3.2.1"
+    "winston": "^3.2.1",
+    "tsconfig-paths": "^3.9.0"
   },
   "scripts": {
     "start": "db-migrate up && node -r tsconfig-paths/register server.js --trace-warnings",
@@ -41,7 +42,6 @@
     "sinon-chai": "^3.5.0",
     "ts-mocha": "^7.0.0",
     "ts-node-dev": "^1.0.0-pre.32",
-    "tsconfig-paths": "^3.9.0",
     "tslint": "^6.1.2",
     "tslint-config-standard": "^9.0.0",
     "tslint-microsoft-contrib": "^6.2.0"
