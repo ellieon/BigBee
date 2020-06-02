@@ -22,6 +22,14 @@ describe('Bottom Command', function () {
     it('when message contains "🥺"', async function () {
       await checkAndAssertMatches('There is some other text here and 🥺 just happens to appear in it ')
     })
+
+    it(`when message contains "👉👈"`, async function () {
+      await checkAndAssertMatches('👉👈')
+    })
+
+    it(`when message contains "👉👈" and "🥺"`, async function () {
+      await checkAndAssertMatches('👉👈🥺')
+    })
   })
 
   describe('Should not trigger', function () {
