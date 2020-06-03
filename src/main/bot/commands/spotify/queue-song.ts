@@ -48,6 +48,7 @@ export class QueueSong extends BaseCommand {
 
     if (users.length === 0) {
       message.channel.send('There are currently no registered spotify users').catch(logger.error)
+      return
     }
 
     for (let i = 0; i < users.length; i++) {

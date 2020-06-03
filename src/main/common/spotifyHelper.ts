@@ -48,7 +48,6 @@ export class SpotifyHelper {
     logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
 
     const connection: SpotifyConnection = this.cache[userId]
-
     this.spotifyApi.setAccessToken(connection.connectionToken)
     this.spotifyApi.setRefreshToken(connection.refreshToken)
 
@@ -156,5 +155,17 @@ export class SpotifyHelper {
     await request.post(options)
 
     logger.debug(`SpotifyHelper: Queue song complete`)
+  }
+
+  async saveConnection (spotifyConnection: SpotifyConnection) {
+    this.cache[spotifyConnection.userId] = spotifyConnection
+    await this.db.setCurrentSpotifyKey(spotifyConnection.userId, spotifyConnection.connectionToken,
+      spotifyConnection.refreshToken, spotifyConnection.expires)
+      .catch(logger.error)
+  }
+
+  async deleteConnectionForUser (id: any) {
+    this.cache.delete(id)
+    await this.db.deleteUser(id)
   }
 }
