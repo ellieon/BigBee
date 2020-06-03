@@ -87,7 +87,7 @@ export class QueueSong extends BaseCommand {
       message.channel.send(`${successMessage} <@!${users[0].user_id}>'s Beelist and queue`)
         .catch(logger.error)
     } else {
-      message.channel.send(`${successMessage}  to The Beelist and queue for all users`)
+      message.channel.send(`${successMessage} The Beelist and queue for all users`)
         .catch(logger.error)
     }
 
