@@ -62,7 +62,9 @@ export class SpotifyHelper {
 
   private async refreshTime (oldConnection: SpotifyConnection): Promise<SpotifyConnection> {
     logger.debug(`SpotifyHelper: Refreshing token for ${oldConnection.userId}`)
-    const data = await this.spotifyApi.refreshAccessToken().catch(logger.error)
+    this.spotifyApi.setAccessToken(oldConnection.connectionToken)
+    this.spotifyApi.setRefreshToken(oldConnection.refreshToken)
+    const data = await this.spotifyApi.refreshAccessToken().catch(() => logger.error('Failed to refresh token'))
     let refreshDate: Date = new Date()
     refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
 
