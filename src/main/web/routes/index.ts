@@ -22,7 +22,7 @@ async function indexRoute (req, res, next) {
 
   }
 
-  res.render('index.html', {
+  res.render('index.njk', {
     baseUrl: EnvironmentHelper.getBaseURL(),
     discordConnected: token !== undefined,
     spotifyConnected: spotifyConnection !== undefined,

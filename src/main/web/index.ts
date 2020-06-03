@@ -23,6 +23,8 @@ export class WebService {
     this.app.use(express.static(__dirname + '/resource'))
     this.app.set('views', __dirname + '/views')
 
+    this.app.set('view engine', 'njk')
+
     nunjucks(this.app, {
       watch: EnvironmentHelper.isDevelopmentMode(),
       noCache: EnvironmentHelper.isDevelopmentMode()
