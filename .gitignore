@@ -106,4 +106,3 @@ dist
 node_modules/
 .idea/
 build/
-*.js

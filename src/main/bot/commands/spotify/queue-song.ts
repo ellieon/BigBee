@@ -11,6 +11,9 @@ const COMMAND_STRING: RegExp = /^bee!queue(?:\s<@!(?<userId>\d{17,19})>?)?(?:\s(
 
 @Command.register
 export class QueueSong extends BaseCommand {
+  private static readonly PLAYLIST_NAME = 'The Beelist'
+  private static readonly PLAYLIST_DESC = `Errybody knows it's BIG DICK BEE!`
+
   private helper: SpotifyHelper = SpotifyHelper.getInstance()
   private readonly db: DatabaseHelper = new DatabaseHelper()
 
@@ -55,7 +58,7 @@ export class QueueSong extends BaseCommand {
 
         if (!trackData) {
           message.channel.send('I was unable to connect to spotify to search for tracks').catch(logger.error)
-          this.crossReactMessage(message)
+          await this.crossReactMessage(message)
           return
         }
 
@@ -63,7 +66,7 @@ export class QueueSong extends BaseCommand {
 
         if (tracks.length === 0) {
           message.channel.send('I was unable to find any tracks by the name' + songName).catch(logger.error)
-          this.crossReactMessage(message)
+          await this.crossReactMessage(message)
           return
         }
 
@@ -74,6 +77,19 @@ export class QueueSong extends BaseCommand {
       }
 
       await this.helper.queueSong(uri, userId).catch(logger.error)
+
+      let playlistId: string = await this.helper.getPlaylistForUser(userId,
+        QueueSong.PLAYLIST_NAME)
+
+      if (!playlistId) {
+        playlistId = await this.helper.createPlaylistForUser(userId, QueueSong.PLAYLIST_NAME, QueueSong.PLAYLIST_DESC)
+      }
+
+      if (playlistId) {
+        await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
+      } else {
+        logger.error(`Unable to create playlist for user ${userId}`)
+      }
     }
 
     const successMessage = `Added the song \`${name} by ${artist}\` to`
@@ -85,7 +101,7 @@ export class QueueSong extends BaseCommand {
         .catch(logger.error)
     }
 
-    this.checkReactMessage(message)
+    await this.checkReactMessage(message)
 
   }
 }
