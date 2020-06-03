@@ -9,8 +9,8 @@
             <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
                 {% if not discordConnected %}
                 <h1 class="heading-black text-capitalize">Everybody Knows...</h1>
-                <p class="lead py-3">it's Big Dick Bee is a closed alpha discord bot. If you are on a server currently using
-                    Big Dick Bee, login here to see your spotify status:</p>
+                <p class="lead py-3">It's Big Dick Bee, a closed alpha discord bot. If you are a member of a Discord
+                    guild with Big Dick Bee, login here to see your spotify status:</p>
                 <form action="{{ baseUrl }}/connect" method="get">
                     <button class="btn btn-primary d-inline-flex flex-row align-items-center">
                         Login
@@ -19,7 +19,7 @@
                 </form>
                 {% elif not spotifyConnected %}
                 <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
-                <p class="lead py-3">It seems your Spotify is not connected, you can connect here:</p>
+                <p class="lead py-3">It seems your Spotify account is not connected, you can connect here:</p>
                 <form action="{{ baseUrl }}/spotify-login" method="get">
                     <button class="btn btn-primary d-inline-flex flex-row align-items-center">
                         Connect
@@ -28,7 +28,7 @@
                 </form>
                 {% else %}
                 <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
-                <p class="lead py-3">Your Spotify is currently connected, you can disconnect here:</p>
+                <p class="lead py-3">Your Spotify account is currently connected, you can disconnect here:</p>
                 <form action="{{ baseUrl }}/disconnect" method="get">
                     <button class="btn btn-primary d-inline-flex flex-row align-items-center">
                         Disconnect
