@@ -5,6 +5,7 @@ const Pool = require('pg').Pool
 
 export class SpotifyConnection {
   constructor (
+    public userId: string,
     public connectionToken: string,
     public refreshToken: string,
     public expires: Date
@@ -26,12 +27,28 @@ export class DatabaseHelper {
    `
   private static readonly GET_KEY: string =
       `SELECT connection_token, refresh_token, expires FROM spotify_connections WHERE user_id=$1`
+
+  private static readonly GET_KEYS: string =
+      `SELECT * FROM spotify_connections`
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
 
   readonly pool = new Pool({
     connectionString: env.getDatabaseURL()
   })
+
+  async getAllSpotifyKeys (): Promise<Map<string, SpotifyConnection>> {
+    logger.debug(`DatabaseHelper: get all spotify keys`)
+    const results = await this.pool.query(DatabaseHelper.GET_KEYS).catch(logger.error)
+    let connections = new Map<string, SpotifyConnection>()
+
+    for (let row of results.rows) {
+      connections[row.user_id] =
+        new SpotifyConnection(row.user_id, row.connection_token, row.refresh_token, new Date(row.expires))
+    }
+
+    return connections
+  }
 
   async getSpotifyKeyForUser (userId: string): Promise<SpotifyConnection> {
     logger.debug(`DatabaseHelper: get spotify key for ${userId}`)
@@ -46,7 +63,7 @@ export class DatabaseHelper {
       logger.debug(`DatabaseHelper: found a user`)
       const row = res.rows[0]
       let expires: Date = new Date(row.expires)
-      return new SpotifyConnection(row.connection_token, row.refresh_token, expires)
+      return new SpotifyConnection(row.user_id, row.connection_token, row.refresh_token, expires)
     }
   }
 
