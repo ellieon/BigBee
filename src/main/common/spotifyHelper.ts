@@ -4,6 +4,14 @@ import * as SpotifyWebApi from 'spotify-web-api-node'
 import * as request from 'request'
 import * as logger from 'winston'
 
+export class SpotifyPlaylist {
+  constructor (
+    public id: string,
+    public name: string
+  ) {
+  }
+}
+
 export class SpotifyHelper {
 
   private static instance: SpotifyHelper
@@ -30,6 +38,7 @@ export class SpotifyHelper {
     return SpotifyHelper.instance
   }
 
+  // TODO: Fucking cache this call, its too slow and used too often
   private async checkConnection (userId: string): Promise<void> {
     logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
     this.spotifyConnection = await this.db.getSpotifyKeyForUser(userId)
@@ -82,24 +91,63 @@ export class SpotifyHelper {
     return data
   }
 
+  public async createPlaylistForUser (userId: string, playListName: string, playlistDescription: string): Promise<string> {
+    logger.debug(`SpotifyHelper: create playlist for user ${userId}, ${playListName}, ${playlistDescription}`)
+    await this.checkConnection(userId)
+    const userDetails = await this.spotifyApi.getMe()
+    const id = userDetails.body.id
+    const response = await this.spotifyApi.createPlaylist(id, playListName, {
+      'description': playlistDescription,
+      'public': false
+    })
+
+    logger.debug(`SpotifyHelper: create playlist done`)
+    return response.body.id
+  }
+
+  public async getPlaylistForUser (userId: string, playlistName: string): Promise<string> {
+    logger.debug(`SpotifyHelper: Get playlist for user ${userId}, ${playlistName}`)
+    await this.checkConnection(userId)
+    const data = await this.spotifyApi.getUserPlaylists()
+    let playLists: SpotifyPlaylist[] = data === undefined ? undefined : data.body.items
+
+    for (let playList of playLists) {
+      if (playList.name === playlistName) {
+        return playList.id
+      }
+    }
+
+    return undefined
+  }
+
+  public async addSongToPlaylistForUser (userId: string, playlistId: string, songUri: string): Promise<void> {
+    logger.debug(`SpotifyHelper: Add song to playlist for user ${userId}, ${playlistId}, ${songUri}`)
+    await this.checkConnection(userId)
+    await this.spotifyApi.addTracksToPlaylist(playlistId, [songUri])
+  }
+
+  public async isUserCurrentlyListening (userId: string): Promise<boolean> {
+    logger.debug(`SpotifyHelper: is user currently listening ${userId}`)
+    await this.checkConnection(userId)
+    const data = await this.spotifyApi.getMyCurrentPlaybackState()
+    return data && data.body.is_playing
+  }
+
   public async queueSong (trackUri: string, userId: string): Promise<void> {
     logger.debug(`SpotifyHelper: Queue song with trackUri: ${trackUri} for user ${userId}`)
     await this.checkConnection(userId)
 
-    const data = await this.spotifyApi.getMyCurrentPlaybackState()
-
-    if (data.body.is_playing) {
-      const options = {
-        url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
-        headers: {
-          'Accept': 'application/json',
-          'Content-Type': 'application/json',
-          'User-Agent': 'request',
-          'Authorization': `Bearer ${this.spotifyConnection.connectionToken}`
-        }
+    const options = {
+      url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json',
+        'User-Agent': 'request',
+        'Authorization': `Bearer ${this.spotifyConnection.connectionToken}`
       }
-      await request.post(options)
     }
+    await request.post(options)
+
     logger.debug(`SpotifyHelper: Queue song complete`)
   }
 }
