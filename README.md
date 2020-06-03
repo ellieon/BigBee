@@ -25,6 +25,8 @@ The following environment variables must be set and accessible to BDB:
 - `DATABASE_URL`= The connection string of a PostgreSQL database for this application to use 
     eg: `postgresql://big_dick_bee:big_dick_bee@localhost:5432/big_dick_bee`
 - `PORT` - (Defaults to 3000) The port for the frontend application to bind to
+- `BEE_JWT_SECRET` - The secret to use for signing JWT tokens
+- `BEE_GREETER_CHANNEL` - The discord channel to fallback the greeter extension to when it can't DM a user
      
 ## Startup
 Simply run `npm run start-dev` to run the application under `ts-node`

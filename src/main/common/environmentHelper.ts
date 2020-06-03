@@ -59,4 +59,8 @@ export class EnvironmentHelper {
       return process.env.BEE_LOGGING_LEVEL || 'info'
     }
   }
+
+  static getJWTSecret () {
+    return process.env.BEE_JWT_SECRET
+  }
 }

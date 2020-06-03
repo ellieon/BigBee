@@ -1,11 +1,12 @@
 import * as jwt from 'jsonwebtoken'
 import { Request, Response } from 'express'
 import * as logger from 'winston'
+import { EnvironmentHelper } from 'common/environmentHelper'
 
 export class JwtHelper {
 
-  private static readonly jwtKey: string = 'SUPER_SECRET_KEY'
-  private static readonly jwtExpiry: number = 300
+  private static readonly jwtKey: string = EnvironmentHelper.getJWTSecret()
+  private static readonly jwtExpiry: number = 3600
 
   static createBearerToken (bearerToken: string): any {
     return jwt.sign({ bearerToken }, this.jwtKey, {
