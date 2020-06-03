@@ -83,10 +83,10 @@ export class QueueSong extends BaseCommand {
 
     const successMessage = `Added the song \`${name} by ${artist}\` to`
     if (users.length === 1) {
-      message.channel.send(`${successMessage} <@!${users[0].user_id}>'s queue`)
+      message.channel.send(`${successMessage} <@!${users[0].user_id}>'s Beelist and queue`)
         .catch(logger.error)
     } else {
-      message.channel.send(`${successMessage}  all users queue`)
+      message.channel.send(`${successMessage}  to The Beelist and queue for all users`)
         .catch(logger.error)
     }
 
@@ -106,7 +106,7 @@ export class QueueSong extends BaseCommand {
       await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
     } else {
       message.channel.send(`Unable to create playlist for <@!${userId}>`)
-        .catch((err) => logger.error(`unable to create playist for ${userId}: ${err}`))
+        .catch((err) => logger.error(`unable to create playlist for ${userId}: ${err}`))
     }
   }
 }
