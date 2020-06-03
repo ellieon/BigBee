@@ -78,18 +78,7 @@ export class QueueSong extends BaseCommand {
 
       await this.helper.queueSong(uri, userId).catch(logger.error)
 
-      let playlistId: string = await this.helper.getPlaylistForUser(userId,
-        QueueSong.PLAYLIST_NAME)
-
-      if (!playlistId) {
-        playlistId = await this.helper.createPlaylistForUser(userId, QueueSong.PLAYLIST_NAME, QueueSong.PLAYLIST_DESC)
-      }
-
-      if (playlistId) {
-        await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
-      } else {
-        logger.error(`Unable to create playlist for user ${userId}`)
-      }
+      await this.addToPlaylist(userId, uri, message)
     }
 
     const successMessage = `Added the song \`${name} by ${artist}\` to`
@@ -103,5 +92,21 @@ export class QueueSong extends BaseCommand {
 
     await this.checkReactMessage(message)
 
+  }
+
+  private async addToPlaylist (userId: string, uri: string, message: DiscordClient.Message) {
+    let playlistId: string = await this.helper.getPlaylistForUser(userId,
+      QueueSong.PLAYLIST_NAME)
+
+    if (!playlistId) {
+      playlistId = await this.helper.createPlaylistForUser(userId, QueueSong.PLAYLIST_NAME, QueueSong.PLAYLIST_DESC)
+    }
+
+    if (playlistId) {
+      await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
+    } else {
+      message.channel.send(`Unable to create playlist for <@!${userId}>`)
+        .catch((err) => logger.error(`unable to create playist for ${userId}: ${err}`))
+    }
   }
 }

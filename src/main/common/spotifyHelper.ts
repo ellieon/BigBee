@@ -18,7 +18,7 @@ export class SpotifyHelper {
 
   private readonly db: DatabaseHelper
   private readonly spotifyApi: SpotifyWebApi
-  private spotifyConnection: SpotifyConnection = undefined
+  private cache: Map<string, SpotifyConnection> = undefined
 
   private constructor () {
     this.spotifyApi = new SpotifyWebApi({
@@ -28,6 +28,7 @@ export class SpotifyHelper {
     })
 
     this.db = new DatabaseHelper()
+    this.fillCache().catch(logger.error)
   }
 
   public static getInstance (): SpotifyHelper {
@@ -38,33 +39,39 @@ export class SpotifyHelper {
     return SpotifyHelper.instance
   }
 
-  // TODO: Fucking cache this call, its too slow and used too often
-  private async checkConnection (userId: string): Promise<void> {
-    logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
-    this.spotifyConnection = await this.db.getSpotifyKeyForUser(userId)
-    if (!this.spotifyConnection) {
-      return
-    }
-
-    this.spotifyApi.setAccessToken(this.spotifyConnection.connectionToken)
-    this.spotifyApi.setRefreshToken(this.spotifyConnection.refreshToken)
-
-    if (this.spotifyConnection.expires <= new Date()) {
-      await this.refreshTime(userId)
-    }
-    logger.debug(`SpotifyHelper: check connection complete`)
+  private async fillCache (): Promise<void> {
+    logger.debug('SpotifyHelper: Retrieving cache')
+    this.cache = await this.db.getAllSpotifyKeys()
   }
 
-  private async refreshTime (userId: string): Promise<void> {
+  private async checkConnection (userId: string): Promise<SpotifyConnection> {
+    logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
+
+    const connection: SpotifyConnection = this.cache[userId]
+
+    this.spotifyApi.setAccessToken(connection.connectionToken)
+    this.spotifyApi.setRefreshToken(connection.refreshToken)
+
+    if (connection.expires <= new Date()) {
+      await this.refreshTime(userId)
+    }
+
+    logger.debug(`SpotifyHelper: check connection complete`)
+    return connection
+  }
+
+  private async refreshTime (userId: string): Promise<SpotifyConnection> {
     logger.debug(`SpotifyHelper: Refreshing token for ${userId}`)
     const data = await this.spotifyApi.refreshAccessToken().catch(logger.error)
     let refreshDate: Date = new Date()
     refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
-    this.spotifyConnection = new SpotifyConnection(data.body.access_token, data.body.refresh_token, refreshDate)
-    this.spotifyApi.setAccessToken(this.spotifyConnection.connectionToken)
-    this.spotifyApi.setRefreshToken(this.spotifyConnection.refreshToken)
-    await this.db.updateSpotifyKeyForUser(userId, this.spotifyConnection.connectionToken, this.spotifyConnection.expires).catch(logger.error)
+    const connection: SpotifyConnection = new SpotifyConnection(userId, data.body.access_token, data.body.refresh_token, refreshDate)
+    this.spotifyApi.setAccessToken(connection.connectionToken)
+    this.spotifyApi.setRefreshToken(connection.refreshToken)
+    this.cache[userId] = connection
+    await this.db.updateSpotifyKeyForUser(userId, connection.connectionToken, connection.expires).catch(logger.error)
     logger.debug(`SpotifyHelper: refresh token done`)
+    return connection
 
   }
 
@@ -135,7 +142,7 @@ export class SpotifyHelper {
 
   public async queueSong (trackUri: string, userId: string): Promise<void> {
     logger.debug(`SpotifyHelper: Queue song with trackUri: ${trackUri} for user ${userId}`)
-    await this.checkConnection(userId)
+    const connection: SpotifyConnection = await this.checkConnection(userId)
 
     const options = {
       url: `https://api.spotify.com/v1/me/player/queue?uri=${trackUri}`,
@@ -143,7 +150,7 @@ export class SpotifyHelper {
         'Accept': 'application/json',
         'Content-Type': 'application/json',
         'User-Agent': 'request',
-        'Authorization': `Bearer ${this.spotifyConnection.connectionToken}`
+        'Authorization': `Bearer ${connection.connectionToken}`
       }
     }
     await request.post(options)
