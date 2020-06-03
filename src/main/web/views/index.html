@@ -1,0 +1,43 @@
+{% extends "template/base.html" %}
+
+
+<!--hero header-->
+{% block content %}
+<section class="py-7 py-md-0 bg-hero" id="home">
+    <div class="container">
+        <div class="row vh-md-100">
+            <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
+                {% if not discordConnected %}
+                <h1 class="heading-black text-capitalize">Everybody Knows...</h1>
+                <p class="lead py-3">it's Big Dick Bee is a closed alpha discord bot. If you are on a server currently using
+                    Big Dick Bee, login here to see your spotify status:</p>
+                <form action="{{ baseUrl }}/connect" method="get">
+                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                        Login
+                        <em class="ml-2" data-feather="arrow-right"></em>
+                    </button>
+                </form>
+                {% elif not spotifyConnected %}
+                <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
+                <p class="lead py-3">It seems your Spotify is not connected, you can connect here:</p>
+                <form action="{{ baseUrl }}/spotify-login" method="get">
+                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                        Connect
+                        <em class="ml-2" data-feather="arrow-right"></em>
+                    </button>
+                </form>
+                {% else %}
+                <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
+                <p class="lead py-3">Your Spotify is currently connected, you can disconnect here:</p>
+                <form action="{{ baseUrl }}/disconnect" method="get">
+                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                        Disconnect
+                        <em class="ml-2" data-feather="arrow-right"></em>
+                    </button>
+                </form>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</section>
+{% endblock %}

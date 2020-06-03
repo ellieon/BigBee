@@ -47,29 +47,32 @@ export class SpotifyHelper {
   private async checkConnection (userId: string): Promise<SpotifyConnection> {
     logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
 
-    const connection: SpotifyConnection = this.cache[userId]
+    let connection: SpotifyConnection = this.cache[userId]
+
+    if (connection.expires <= new Date()) {
+      connection = await this.refreshTime(connection)
+    }
 
     this.spotifyApi.setAccessToken(connection.connectionToken)
     this.spotifyApi.setRefreshToken(connection.refreshToken)
-
-    if (connection.expires <= new Date()) {
-      await this.refreshTime(userId)
-    }
 
     logger.debug(`SpotifyHelper: check connection complete`)
     return connection
   }
 
-  private async refreshTime (userId: string): Promise<SpotifyConnection> {
-    logger.debug(`SpotifyHelper: Refreshing token for ${userId}`)
+  private async refreshTime (oldConnection: SpotifyConnection): Promise<SpotifyConnection> {
+    logger.debug(`SpotifyHelper: Refreshing token for ${oldConnection.userId}`)
     const data = await this.spotifyApi.refreshAccessToken().catch(logger.error)
     let refreshDate: Date = new Date()
     refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
-    const connection: SpotifyConnection = new SpotifyConnection(userId, data.body.access_token, data.body.refresh_token, refreshDate)
+
+    const connection: SpotifyConnection = new SpotifyConnection(oldConnection.userId, data.body.access_token, data.body.refresh_token, refreshDate)
     this.spotifyApi.setAccessToken(connection.connectionToken)
     this.spotifyApi.setRefreshToken(connection.refreshToken)
-    this.cache[userId] = connection
-    await this.db.updateSpotifyKeyForUser(userId, connection.connectionToken, connection.expires).catch(logger.error)
+    this.cache[connection.userId] = connection
+
+    await this.db.updateSpotifyKeyForUser(connection.userId, connection.connectionToken, connection.expires).catch(logger.error)
+
     logger.debug(`SpotifyHelper: refresh token done`)
     return connection
 
@@ -156,5 +159,17 @@ export class SpotifyHelper {
     await request.post(options)
 
     logger.debug(`SpotifyHelper: Queue song complete`)
+  }
+
+  async saveConnection (spotifyConnection: SpotifyConnection) {
+    this.cache[spotifyConnection.userId] = spotifyConnection
+    await this.db.setCurrentSpotifyKey(spotifyConnection.userId, spotifyConnection.connectionToken,
+      spotifyConnection.refreshToken, spotifyConnection.expires)
+      .catch(logger.error)
+  }
+
+  async deleteConnectionForUser (id: any) {
+    this.cache.delete(id)
+    await this.db.deleteUser(id)
   }
 }
