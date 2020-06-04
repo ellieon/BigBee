@@ -1,4 +1,6 @@
 {
+  "name": "Big Dick Bee",
+  "description": "An open source Discord bot.",
   "env":{
     "HEROKU_APP_NAME": {
       "required": true
