@@ -76,7 +76,12 @@ export class SpotifyHelper {
 
       connection = new SpotifyConnection(oldConnection.userId, data.body.access_token, data.body.refresh_token, refreshDate)
       this.spotifyApi.setAccessToken(connection.connectionToken)
-      this.spotifyApi.setRefreshToken(connection.refreshToken)
+
+      /*
+        refreshAccessToken only returns a new access token (you'd think this would be obvious right?.......)
+        So we keep the old refresh token, but change the access token with the new one.
+      */
+      this.spotifyApi.setRefreshToken(oldConnection.refreshToken)
       this.cache[connection.userId] = connection
 
       await this.db.updateSpotifyKeyForUser(connection.userId, connection.connectionToken, connection.expires)
