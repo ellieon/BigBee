@@ -1,41 +1,50 @@
 {% extends "template/base.njk" %}
 
+{% block navigation %}
+    {% if discordConnected %}
+        <li><a class="nav-link page-scroll" href="/logout">Logout</a></li>
+    {% else %}
+        <li><a class="nav-link page-scroll" href="/connect">Log In</a></li>
+    {% endif %}
+{% endblock %}
+
 {% block content %}
-<section class="py-7 py-md-0 bg-hero" id="home">
-    <div class="container">
-        <div class="row vh-md-100">
-            <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
-                {% if not discordConnected %}
-                <h1 class="heading-black text-capitalize">Everybody Knows...</h1>
-                <p class="lead py-3">It's Big Dick Bee, a closed alpha discord bot. If you are a member of a Discord
-                    guild with Big Dick Bee, login here to see your spotify status:</p>
-                <form action="{{ baseUrl }}/connect" method="get">
-                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
-                        Login
-                        <em class="ml-2" data-feather="arrow-right"></em>
-                    </button>
-                </form>
-                {% elif not spotifyConnected %}
-                <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
-                <p class="lead py-3">It seems your Spotify account is not connected, you can connect here:</p>
-                <form action="{{ baseUrl }}/spotify-login" method="get">
-                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
-                        Connect
-                        <em class="ml-2" data-feather="arrow-right"></em>
-                    </button>
-                </form>
-                {% else %}
-                <h1 class="heading-black text-capitalize">Hello {{username}}</h1>
-                <p class="lead py-3">Your Spotify account is currently connected, you can disconnect here:</p>
-                <form action="{{ baseUrl }}/disconnect" method="get">
-                    <button class="btn btn-primary d-inline-flex flex-row align-items-center">
-                        Disconnect
-                        <em class="ml-2" data-feather="arrow-right"></em>
-                    </button>
-                </form>
-                {% endif %}
+    <section class="py-7 py-md-0 bg-hero" id="home">
+        <div class="container">
+            <div class="row vh-md-100">
+                <div class="col-md-8 col-sm-10 col-12 mx-auto my-auto text-center">
+                    {% if not discordConnected %}
+                        <h1 class="heading-black text-capitalize">Everybody Knows...</h1>
+                        <p class="lead py-3">It's Big Dick Bee, a closed alpha discord bot. If you are a member of a
+                            Discord
+                            guild with Big Dick Bee, login here to see your spotify status:</p>
+                        <form action="/connect" method="get">
+                            <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                                Login
+                                <em class="ml-2" data-feather="arrow-right"></em>
+                            </button>
+                        </form>
+                        {% elif not spotifyConnected %}
+                        <h1 class="heading-black text-capitalize">Hello {{ username }}</h1>
+                        <p class="lead py-3">It seems your Spotify account is not connected, you can connect here:</p>
+                        <form action="/spotify-login" method="get">
+                            <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                                Connect
+                                <em class="ml-2" data-feather="arrow-right"></em>
+                            </button>
+                        </form>
+                    {% else %}
+                        <h1 class="heading-black text-capitalize">Hello {{ username }}</h1>
+                        <p class="lead py-3">Your Spotify account is currently connected, you can disconnect here:</p>
+                        <form action="/disconnect" method="get">
+                            <button class="btn btn-primary d-inline-flex flex-row align-items-center">
+                                Disconnect
+                                <em class="ml-2" data-feather="arrow-right"></em>
+                            </button>
+                        </form>
+                    {% endif %}
+                </div>
             </div>
         </div>
-    </div>
-</section>
+    </section>
 {% endblock %}
