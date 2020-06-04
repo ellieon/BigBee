@@ -3,6 +3,8 @@
 {% block navigation %}
     {% if discordConnected %}
         <li><a class="nav-link page-scroll" href="{{ baseUrl }}/logout">Logout</a></li>
+    {% else %}
+        <li><a class="nav-link page-scroll" href="{{ baseUrl }}/connect">Log In</a></li>
     {% endif %}
 {% endblock %}
 
