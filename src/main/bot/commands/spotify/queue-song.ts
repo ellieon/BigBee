@@ -66,7 +66,7 @@ export class QueueSong extends BaseCommand {
         const tracks = trackData.body.tracks.items
 
         if (tracks.length === 0) {
-          message.channel.send('I was unable to find any tracks by the name' + songName).catch(logger.error)
+          message.channel.send('I was unable to find any tracks by the name ' + songName).catch(logger.error)
           await this.crossReactMessage(message)
           return
         }
