@@ -29,6 +29,7 @@ export default express.Router()
 
       const token: any = JwtHelper.createBearerToken(data.access_token)
       JwtHelper.saveBearerTokenToCookie(res, token)
+      logger.debug(`Redirecting to ${EnvironmentHelper.getBaseURL()}/${req.query.state}`)
       res.redirect(`${EnvironmentHelper.getBaseURL()}/${req.query.state}`)
     } catch (err) {
       logger.error(err)
