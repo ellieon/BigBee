@@ -39,6 +39,14 @@ export class SpotifyHelper {
     return SpotifyHelper.instance
   }
 
+  public getConnectionForUser (userId: string): SpotifyConnection {
+    return this.cache.get(userId)
+  }
+
+  public getAllConnections (): SpotifyConnection[] {
+    return Array.from(this.cache.values())
+  }
+
   private async fillCache (): Promise<void> {
     logger.debug('SpotifyHelper: Retrieving cache')
     this.cache = await this.db.getAllSpotifyKeys()
@@ -47,7 +55,7 @@ export class SpotifyHelper {
   private async checkConnection (userId: string): Promise<SpotifyConnection> {
     logger.debug(`SpotifyHelper: Checking connection for user ${userId}`)
 
-    let connection: SpotifyConnection = this.cache[userId]
+    let connection: SpotifyConnection = this.cache.get(userId)
 
     if (connection.expires <= new Date()) {
       connection = await this.refreshTime(connection)
@@ -82,7 +90,8 @@ export class SpotifyHelper {
       this.spotifyApi.setAccessToken(connection.connectionToken)
       this.spotifyApi.setRefreshToken(connection.refreshToken)
 
-      this.cache[connection.userId] = connection
+      this.cache.set(connection.userId, connection)
+      this.cache.set(connection.userId, connection)
 
       await this.db.updateSpotifyKeyForUser(connection.userId, connection.connectionToken, connection.expires)
         .catch(logger.error)
@@ -180,14 +189,14 @@ export class SpotifyHelper {
   }
 
   async saveConnection (spotifyConnection: SpotifyConnection) {
-    this.cache[spotifyConnection.userId] = spotifyConnection
+    this.cache.set(spotifyConnection.userId, spotifyConnection)
     await this.db.setCurrentSpotifyKey(spotifyConnection.userId, spotifyConnection.connectionToken,
       spotifyConnection.refreshToken, spotifyConnection.expires)
       .catch(logger.error)
   }
 
-  async deleteConnectionForUser (id: any) {
-    this.cache.delete(id)
+  async deleteConnectionForUser (id: string) {
     await this.db.deleteUser(id)
+    this.cache.delete(id)
   }
 }
