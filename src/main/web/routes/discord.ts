@@ -1,5 +1,5 @@
 import * as express from 'express'
-import { EnvironmentHelper as env } from 'common/environmentHelper'
+import { EnvironmentHelper, EnvironmentHelper as env } from 'common/environmentHelper'
 import { JwtHelper } from 'web/common/jwtHelper'
 import * as logger from 'winston'
 
@@ -29,7 +29,7 @@ export default express.Router()
 
       const token: any = JwtHelper.createBearerToken(data.access_token)
       JwtHelper.saveBearerTokenToCookie(res, token)
-      res.redirect(`${env.getBaseURL()}/${req.query.state}`)
+      res.redirect(`${EnvironmentHelper.getBaseURL()}/${req.query.state}`)
     } catch (err) {
       logger.error(err)
       res.send(err)
