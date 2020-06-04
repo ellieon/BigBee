@@ -53,8 +53,10 @@ export class SpotifyHelper {
       connection = await this.refreshTime(connection)
     }
 
-    this.spotifyApi.setAccessToken(connection.connectionToken)
-    this.spotifyApi.setRefreshToken(connection.refreshToken)
+    if (connection) {
+      this.spotifyApi.setAccessToken(connection.connectionToken)
+      this.spotifyApi.setRefreshToken(connection.refreshToken)
+    }
 
     logger.debug(`SpotifyHelper: check connection complete`)
     return connection
@@ -62,22 +64,31 @@ export class SpotifyHelper {
 
   private async refreshTime (oldConnection: SpotifyConnection): Promise<SpotifyConnection> {
     logger.debug(`SpotifyHelper: Refreshing token for ${oldConnection.userId}`)
-    this.spotifyApi.setAccessToken(oldConnection.connectionToken)
-    this.spotifyApi.setRefreshToken(oldConnection.refreshToken)
-    const data = await this.spotifyApi.refreshAccessToken().catch(() => logger.error('Failed to refresh token'))
-    let refreshDate: Date = new Date()
-    refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
+    let data = undefined
+    let connection: SpotifyConnection = undefined
+    try {
+      this.spotifyApi.setAccessToken(oldConnection.connectionToken)
+      this.spotifyApi.setRefreshToken(oldConnection.refreshToken)
+      logger.info(`SpotifyHelper: trying to refresh token with access: ${oldConnection.connectionToken}, refresh: ${oldConnection.refreshToken}`)
+      data = await this.spotifyApi.refreshAccessToken()
+      let refreshDate: Date = new Date()
+      refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
 
-    const connection: SpotifyConnection = new SpotifyConnection(oldConnection.userId, data.body.access_token, data.body.refresh_token, refreshDate)
-    this.spotifyApi.setAccessToken(connection.connectionToken)
-    this.spotifyApi.setRefreshToken(connection.refreshToken)
-    this.cache[connection.userId] = connection
+      connection = new SpotifyConnection(oldConnection.userId, data.body.access_token, data.body.refresh_token, refreshDate)
+      this.spotifyApi.setAccessToken(connection.connectionToken)
+      this.spotifyApi.setRefreshToken(connection.refreshToken)
+      this.cache[connection.userId] = connection
 
-    await this.db.updateSpotifyKeyForUser(connection.userId, connection.connectionToken, connection.expires).catch(logger.error)
+      await this.db.updateSpotifyKeyForUser(connection.userId, connection.connectionToken, connection.expires)
+        .catch(logger.error)
+      logger.debug(`SpotifyHelper: successfully refreshed token`)
+
+    } catch {
+      logger.error('SpotifyHelper: Failed to refresh token')
+    }
 
     logger.debug(`SpotifyHelper: refresh token done`)
     return connection
-
   }
 
   public async searchForTrack (searchQuery: string, userId: string): Promise<any> {
