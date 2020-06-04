@@ -1,6 +1,6 @@
 import * as DiscordClient from 'discord.js'
 import { BaseCommand } from '../command'
-import { DatabaseHelper, UserID } from 'common/database'
+import { SpotifyConnection } from 'common/database'
 import { SpotifyHelper } from 'common/spotifyHelper'
 import * as logger from 'winston'
 
@@ -11,7 +11,6 @@ const DESCRIPTION = 'Skips to the next song in spotify'
 export class Skip extends BaseCommand {
 
   readonly helper: SpotifyHelper = SpotifyHelper.getInstance()
-  readonly db: DatabaseHelper = new DatabaseHelper()
 
   constructor () {
     super(NAME, COMMAND_STRING, DESCRIPTION)
@@ -23,7 +22,7 @@ export class Skip extends BaseCommand {
 
   async skipSongAndOutput (message: DiscordClient.Message) {
     try {
-      const rows: UserID[] = await this.db.getAllUserIds()
+      const rows: SpotifyConnection[] = this.helper.getAllConnections()
 
       if (rows.length === 0) {
         message.channel.send('There are no connected Spotify users').catch(logger.error)
@@ -31,7 +30,7 @@ export class Skip extends BaseCommand {
       }
 
       for (let i = 0; i < rows.length; i++) {
-        const userId = rows[i].user_id
+        const userId = rows[i].userId
         await this.helper.getCurrentPlaybackState(userId)
         await this.helper.skipTrack(userId).catch(logger.error)
       }

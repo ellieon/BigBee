@@ -43,8 +43,8 @@ export class DatabaseHelper {
     let connections = new Map<string, SpotifyConnection>()
 
     for (let row of results.rows) {
-      connections[row.user_id] =
-        new SpotifyConnection(row.user_id, row.connection_token, row.refresh_token, new Date(row.expires))
+      connections.set(row.user_id,
+        new SpotifyConnection(row.user_id, row.connection_token, row.refresh_token, new Date(row.expires)))
     }
 
     return connections
