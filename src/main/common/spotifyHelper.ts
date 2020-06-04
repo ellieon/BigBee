@@ -69,7 +69,7 @@ export class SpotifyHelper {
     try {
       this.spotifyApi.setAccessToken(oldConnection.connectionToken)
       this.spotifyApi.setRefreshToken(oldConnection.refreshToken)
-      logger.info(`SpotifyHelper: trying to refresh token with access: ${oldConnection.connectionToken}, refresh: ${oldConnection.refreshToken}`)
+      logger.debug(`SpotifyHelper: trying to refresh token with access: ${oldConnection.connectionToken}, refresh: ${oldConnection.refreshToken}`)
       data = await this.spotifyApi.refreshAccessToken()
       let refreshDate: Date = new Date()
       refreshDate.setSeconds(refreshDate.getSeconds() + data.body.expires_in - 10)
