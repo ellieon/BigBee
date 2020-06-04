@@ -7,6 +7,7 @@ export class JwtHelper {
 
   private static readonly jwtKey: string = EnvironmentHelper.getJWTSecret()
   private static readonly jwtExpiry: number = 3600
+  private static readonly tokenName: string = 'SESSION_ID'
 
   static createBearerToken (bearerToken: string): any {
     return jwt.sign({ bearerToken }, this.jwtKey, {
@@ -28,6 +29,10 @@ export class JwtHelper {
   }
 
   static saveBearerTokenToCookie (res: Response, token: any) {
-    res.cookie('SESSION_ID', token, { maxAge: this.jwtExpiry * 1000 })
+    res.cookie(this.tokenName, token, { maxAge: this.jwtExpiry * 1000 })
+  }
+
+  static expireCookie (res: Response) {
+    res.clearCookie(this.tokenName)
   }
 }

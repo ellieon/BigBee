@@ -1,5 +1,12 @@
 {% extends "template/base.njk" %}
 
+{% if discordConnected %}
+    {% block navigation %}
+        <li><a class="nav-link page-scroll" href="{{ baseUrl }}/logout">Logout</a></li>
+    {% endblock %}
+
+{% endif %}
+
 {% block content %}
 <section class="py-7 py-md-0 bg-hero" id="home">
     <div class="container">
