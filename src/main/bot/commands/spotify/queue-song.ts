@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import { BaseCommand, Command } from 'bot/commands/command'
 import { SpotifyHelper } from 'common/spotifyHelper'
-import { DatabaseHelper, UserID } from 'common/database'
+import { SpotifyConnection } from 'common/database'
 
 import * as logger from 'winston'
 
@@ -15,7 +15,6 @@ export class QueueSong extends BaseCommand {
   private static readonly PLAYLIST_DESC = `Errybody knows it's BIG DICK BEE!`
 
   private helper: SpotifyHelper = SpotifyHelper.getInstance()
-  private readonly db: DatabaseHelper = new DatabaseHelper()
 
   constructor () {
     super(NAME, COMMAND_STRING, DESCRIPTION)
@@ -35,11 +34,11 @@ export class QueueSong extends BaseCommand {
       return
     }
 
-    let users: UserID[]
+    let users: SpotifyConnection[]
     if (matches.groups.userId) {
-      users = [{ user_id: matches.groups.userId }]
+      users = [this.helper.getConnectionForUser(matches.groups.userId)]
     } else {
-      users = await this.db.getAllUserIds()
+      users = this.helper.getAllConnections()
     }
 
     let name: string = undefined
@@ -52,7 +51,7 @@ export class QueueSong extends BaseCommand {
     }
 
     for (let i = 0; i < users.length; i++) {
-      const userId: string = users[i].user_id
+      const userId: string = users[i].userId
 
       if (!uri) {
         const trackData = await this.helper.searchForTrack(songName, userId)
@@ -84,7 +83,7 @@ export class QueueSong extends BaseCommand {
 
     const successMessage = `Added the song \`${name} by ${artist}\` to`
     if (users.length === 1) {
-      message.channel.send(`${successMessage} <@!${users[0].user_id}>'s Beelist and queue`)
+      message.channel.send(`${successMessage} <@!${users[0].userId}>'s Beelist and queue`)
         .catch(logger.error)
     } else {
       message.channel.send(`${successMessage} The Beelist and queue for all users`)
