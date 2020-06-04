@@ -8,16 +8,12 @@
     "HEROKU_PARENT_APP_NAME": {
       "required": true
     },
-    "DATABASE_URL": {
-      "required": true
-    }
   },
-  "addons": [
-    {
-      "plan": "heroku-postgresql",
-      "options": {
-        "version": "9.5"
-      }
+  "environments": {
+    "review": {
+      "addons": [
+        "heroku-postgresql:hobby-dev"
+      ]
     }
-  ]
+  }
 }
