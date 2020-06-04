@@ -1,7 +1,7 @@
 export class EnvironmentHelper {
 
   static getBaseURL (): string {
-    return process.env.BEE_URL || `${process.env.HEROKU_APP_NAME}.herokuapp.com`
+    return process.env.BEE_URL || `https://${process.env.HEROKU_APP_NAME}.herokuapp.com`
   }
 
   static getEnvironment (): string {
