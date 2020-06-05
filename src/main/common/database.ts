@@ -33,9 +33,22 @@ export class DatabaseHelper {
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
 
+  private static instance: DatabaseHelper
+
   readonly pool = new Pool({
     connectionString: env.getDatabaseURL()
   })
+
+  private constructor () {
+  }
+
+  public static getInstance (): DatabaseHelper {
+    if (!DatabaseHelper.instance) {
+      DatabaseHelper.instance = new DatabaseHelper()
+    }
+
+    return DatabaseHelper.instance
+  }
 
   async getAllSpotifyKeys (): Promise<Map<string, SpotifyConnection>> {
     logger.debug(`DatabaseHelper: get all spotify keys`)

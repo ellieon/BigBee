@@ -27,7 +27,7 @@ export class SpotifyHelper {
       redirectUri: env.getSpotifyCallbackUrl()
     })
 
-    this.db = new DatabaseHelper()
+    this.db = DatabaseHelper.getInstance()
     this.fillCache().catch(logger.error)
   }
 
@@ -108,7 +108,7 @@ export class SpotifyHelper {
   public async searchForTrack (searchQuery: string, userId: string): Promise<any> {
     logger.debug(`SpotifyHelper: Searching for track with search query: ${searchQuery} and userId ${userId}`)
     await this.checkConnection(userId)
-    const trackData = await this.spotifyApi.searchTracks(searchQuery, { limit: 1 }).catch(logger.error)
+    const trackData = await this.spotifyApi.searchTracks(searchQuery, { limit: 1 })
     logger.debug(`SpotifyHelper: Searching for track done`)
     return trackData
   }
