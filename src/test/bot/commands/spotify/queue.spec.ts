@@ -10,13 +10,10 @@ describe('Queue Command', function () {
   let queue: QueueSong
 
   beforeEach(() => {
-    MockSpotifyHelper.createMockSpotifyHelper()
-    queue = new QueueSong()
-  })
-
-  afterEach(() => {
     sinon.restore()
     ImportMock.restore()
+    MockSpotifyHelper.createMockSpotifyHelper()
+    queue = new QueueSong()
   })
 
   describe('When called with no user', function () {

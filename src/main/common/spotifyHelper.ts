@@ -14,15 +14,6 @@ export class SpotifyPlaylist {
 
 export class SpotifyHelper {
 
-  public static readonly queueOptions = {
-    url: `https://api.spotify.com/v1/me/player/queue?uri=$0`,
-    headers: {
-      'Accept': 'application/json',
-      'Content-Type': 'application/json',
-      'User-Agent': 'request',
-      'Authorization': `Bearer $1`
-    }
-  }
   private static instance: SpotifyHelper
 
   private readonly db: DatabaseHelper
