@@ -24,7 +24,7 @@ Once connected, you can disconnect from the same website, or run bee!disconnect`
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
 
-  async execute (message: DiscordClient.Message): Promise<void> {
+  async execute (message: DiscordClient.Message, content: string): Promise<void> {
     message.channel.send(Connect.OUTPUT_MESSAGE).catch(logger.error)
     await this.checkReactMessage(message)
   }

@@ -18,7 +18,7 @@ export class Disconnect extends BaseCommand {
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
 
-  async execute (message: DiscordClient.Message): Promise<void> {
+  async execute (message: DiscordClient.Message, content: string): Promise<void> {
     const connection: SpotifyConnection = this.spotifyHelper.getConnectionForUser(message.author.id)
     if (!connection) {
       message.channel.send(`<@!${message.author.id}> is not currently connected`).catch(logger.error)

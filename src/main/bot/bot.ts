@@ -82,7 +82,7 @@ export class BeeBot {
     this.registeredCommands.forEach((c) => {
       if (c.checkTrigger(message)) {
         logger.info(`Executing command ${c.getName()}`)
-        c.execute(message)
+        c.execute(message, message.content.toLowerCase())
           .then(() => logger.info(`Command executed ${c.getName()}`))
           .catch(logger.error)
       }
