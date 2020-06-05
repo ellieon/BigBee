@@ -1,7 +1,6 @@
 import { ImportMock } from 'ts-mock-imports'
 import * as DatabaseHelper from 'common/database'
 import * as sinon from 'sinon'
-import * as logger from 'winston'
 
 export class MockSpotifyHelper {
 
@@ -74,11 +73,6 @@ export class MockSpotifyHelper {
   }
 
   static createMockSpotifyHelper () {
-
-    logger.remove(logger.transports.Console)
-    logger.add(new logger.transports.Console({
-      silent: true
-    }))
 
     let databaseHelper = sinon.createStubInstance(DatabaseHelper.DatabaseHelper)
     databaseHelper.getAllSpotifyKeys.returns(this.mockConnectionData)
