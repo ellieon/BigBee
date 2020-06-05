@@ -31,9 +31,7 @@
     "postinstall": "npm run build",
     "start-dev": "db-migrate up && ts-node -r tsconfig-paths/register server.ts",
     "lint": "tsc --noEmit && tslint --project tsconfig.json",
-
-    "test": "cross-env NODE_ENV=test mocha -r tsconfig-paths/register -r ts-node/register src/**/*.spec.ts",
-    "old-test": "cross-env NODE_ENV=test ts-mocha -r tsconfig-paths/register -p tsconfig.json src/**/*.spec.ts"
+    "test": "cross-env NODE_ENV=test ts-mocha -r tsconfig-paths/register -p tsconfig.json src/**/*.spec.ts"
   },
   "devDependencies": {
     "@types/chai": "^4.2.11",
