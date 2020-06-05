@@ -6,6 +6,10 @@ import { ImportMock } from 'ts-mock-imports'
 import { MockSpotifyHelper } from '../../../helper/mockSpotifyHelper'
 import { Message } from 'discord.js'
 
+before(() => {
+  MockSpotifyHelper.createMockSpotifyHelper()
+})
+
 describe('Queue Command', function () {
   let queue: QueueSong
 
