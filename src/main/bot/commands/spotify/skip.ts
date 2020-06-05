@@ -16,7 +16,7 @@ export class Skip extends BaseCommand {
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
 
-  async execute (message: DiscordClient.Message): Promise<void> {
+  async execute (message: DiscordClient.Message, content: string): Promise<void> {
     await this.skipSongAndOutput(message)
   }
 

@@ -16,12 +16,12 @@ export class Search extends BaseCommand {
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
 
-  async execute (message: DiscordClient.Message): Promise<void> {
-    const params = message.content.match(COMMAND_STRING).groups.songName
+  async execute (message: DiscordClient.Message, content: string): Promise<void> {
+    const params = content.match(COMMAND_STRING).groups.songName
 
     if (!params || params.length === 0) {
       message.channel.send('I need a song name to search `bee!search [search_term]`').catch(logger.error)
-      this.crossReactMessage(message)
+      await this.crossReactMessage(message)
       return
     }
 
@@ -29,13 +29,13 @@ export class Search extends BaseCommand {
 
     if (data.length === 0) {
       message.channel.send(`Could not find any song for ${params}`).catch(logger.error)
-      this.checkReactMessage(message)
+      await this.checkReactMessage(message)
     } else {
       let name = data[0].name
       let artist = data[0].artists[0].name
       message.channel.send(`I found the song \`${name} by ${artist}\` when searching for \`${params}\``)
         .catch(logger.error)
-      this.checkReactMessage(message)
+      await this.checkReactMessage(message)
     }
   }
 }

@@ -20,12 +20,12 @@ export class QueueSong extends BaseCommand {
     super(NAME, COMMAND_STRING, DESCRIPTION)
   }
 
-  async execute (message: DiscordClient.Message): Promise<void> {
-    await this.findAndPlay(message)
+  async execute (message: DiscordClient.Message, content: string): Promise<void> {
+    await this.findAndPlay(message, content)
   }
 
-  async findAndPlay (message: DiscordClient.Message) {
-    const matches = message.content.match(COMMAND_STRING)
+  async findAndPlay (message: DiscordClient.Message, content: string) {
+    const matches = content.match(COMMAND_STRING)
 
     const songName = matches.groups.songName
 
