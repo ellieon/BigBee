@@ -25,88 +25,99 @@ export class QueueSong extends BaseCommand {
   }
 
   async findAndPlay (message: DiscordClient.Message, content: string) {
-    const matches = content.match(COMMAND_STRING)
 
-    const songName = matches.groups.songName
-
-    if (!matches || !songName || songName.length === 0) {
-      message.channel.send('I need a song name to search `bee!queue [search_term]`').catch(logger.error)
-      return
-    }
-
-    let users: SpotifyConnection[]
-    if (matches.groups.userId) {
-      users = [this.helper.getConnectionForUser(matches.groups.userId)]
-    } else {
-      users = this.helper.getAllConnections()
-    }
-
-    let name: string = undefined
-    let artist: string
-    let uri: string = undefined
-
-    if (users.length === 0) {
-      message.channel.send('There are currently no registered spotify users').catch(logger.error)
-      return
-    }
-
-    for (let i = 0; i < users.length; i++) {
-      const userId: string = users[i].userId
-
-      if (!uri) {
-        const trackData = await this.helper.searchForTrack(songName, userId)
-
-        if (!trackData) {
-          message.channel.send('I was unable to connect to spotify to search for tracks').catch(logger.error)
-          await this.crossReactMessage(message)
-          return
-        }
-
-        const tracks = trackData.body.tracks.items
-
-        if (tracks.length === 0) {
-          message.channel.send('I was unable to find any tracks by the name ' + songName).catch(logger.error)
-          await this.crossReactMessage(message)
-          return
-        }
-
-        name = tracks[0].name
-        artist = tracks[0].artists[0].name
-        uri = tracks[0].uri
-
+    try {
+      if (message.guild === null || message.guild === undefined) {
+        message.channel.send(`Queue only works in guild channels`).catch(logger.error)
+        return
       }
 
-      await this.helper.queueSong(uri, userId).catch(logger.error)
+      const matches = content.match(COMMAND_STRING)
 
-      await this.addToPlaylist(userId, uri, message)
+      const songName = matches.groups.songName
+
+      if (!matches || !songName || songName.length === 0) {
+        message.channel.send('I need a song name to search `bee!queue [search_term]`').catch(logger.error)
+        return
+      }
+
+      let users: SpotifyConnection[]
+      if (matches.groups.userId) {
+        users = [this.helper.getConnectionForUser(matches.groups.userId)]
+      } else {
+        users = this.helper.getAllConnections()
+      }
+
+      let name: string = undefined
+      let artist: string
+      let uri: string = undefined
+
+      if (users.length === 0) {
+        await message.channel.send('There are currently no registered spotify users')
+        return
+      }
+
+      for (let i = 0; i < users.length; i++) {
+        const userId: string = users[i].userId
+
+        if (!uri) {
+          const trackData = await this.helper.searchForTrack(songName, userId)
+
+          if (!trackData) {
+            await message.channel.send('I was unable to connect to spotify to search for tracks')
+            await this.crossReactMessage(message)
+            return
+          }
+
+          const tracks = trackData.body.tracks.items
+
+          if (tracks.length === 0) {
+            await message.channel.send('I was unable to find any tracks by the name ' + songName)
+            await this.crossReactMessage(message)
+            return
+          }
+
+          name = tracks[0].name
+          artist = tracks[0].artists[0].name
+          uri = tracks[0].uri
+
+        }
+
+        await this.helper.queueSong(uri, userId)
+
+        await this.addToPlaylist(userId, uri, message)
+      }
+
+      const successMessage = `Added the song \`${name} by ${artist}\` to`
+      if (users.length === 1) {
+        await message.channel.send(`${successMessage} <@!${users[0].userId}>'s Beelist and queue`)
+      } else {
+        await message.channel.send(`${successMessage} The Beelist and queue for all users`)
+      }
+
+      await this.checkReactMessage(message)
+    } catch (err) {
+      logger.error(err)
     }
-
-    const successMessage = `Added the song \`${name} by ${artist}\` to`
-    if (users.length === 1) {
-      message.channel.send(`${successMessage} <@!${users[0].userId}>'s Beelist and queue`)
-        .catch(logger.error)
-    } else {
-      message.channel.send(`${successMessage} The Beelist and queue for all users`)
-        .catch(logger.error)
-    }
-
-    await this.checkReactMessage(message)
 
   }
 
   private async addToPlaylist (userId: string, uri: string, message: DiscordClient.Message) {
-    let playlistId: string = await this.helper.getPlaylistForUser(userId,
-      QueueSong.PLAYLIST_NAME)
+    try {
+      let playlistId: string = await this.helper.getPlaylistForUser(userId,
+        QueueSong.PLAYLIST_NAME)
 
-    if (!playlistId) {
-      playlistId = await this.helper.createPlaylistForUser(userId, QueueSong.PLAYLIST_NAME, QueueSong.PLAYLIST_DESC)
-    }
+      if (!playlistId) {
+        playlistId = await this.helper.createPlaylistForUser(userId, QueueSong.PLAYLIST_NAME, QueueSong.PLAYLIST_DESC)
+      }
 
-    if (playlistId) {
-      await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
-    } else {
-      message.channel.send(`Unable to create playlist for <@!${userId}>`)
-        .catch((err) => logger.error(`unable to create playlist for ${userId}: ${err}`))
+      if (playlistId) {
+        await this.helper.addSongToPlaylistForUser(userId, playlistId, uri)
+      } else {
+        await message.channel.send(`Unable to create playlist for <@!${userId}>`)
+      }
+    } catch (err) {
+      logger.error(err)
     }
   }
 }
