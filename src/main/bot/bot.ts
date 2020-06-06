@@ -26,7 +26,7 @@ export class BeeBot {
       logger.info(`Environment = ${env.getEnvironment()}`)
       logger.info(`Debug channel = ${env.getDebugChannelName()}`)
       this.bot.user.setPresence({
-        activity: { name: 'Everybody knows it\'s big dick bee! ' },
+        activity: { name: 'BLACK LIVES MATTER!! ' },
         status: 'online'
       }).catch(logger.error)
     })
