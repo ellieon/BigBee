@@ -30,6 +30,14 @@ describe('Bottom Command', function () {
     it(`when message contains "👉👈" and "🥺"`, async function () {
       await checkAndAssertMatches('👉👈🥺')
     })
+
+    it('should trigger when `>.<` is typed', async function () {
+      await checkAndAssertMatches('>.<')
+    })
+
+    it('should trigger when `>_<` is typed', async function () {
+      await checkAndAssertMatches('>_<')
+    })
   })
 
   describe('Should not trigger', function () {
