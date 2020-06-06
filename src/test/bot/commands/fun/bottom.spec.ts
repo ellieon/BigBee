@@ -45,6 +45,10 @@ describe('Bottom Command', function () {
       const message = DiscordTestHelper.createMockMessage('Does not contain the trigger')
       assert.isFalse(bottom.checkTrigger(message))
     })
+    it('when message has >< with something in the middle"', async function () {
+      const message = DiscordTestHelper.createMockMessage('>l<')
+      assert.isFalse(bottom.checkTrigger(message))
+    })
   })
 
   it('should output the correct messages when the trigger is hit', async function () {
