@@ -8,7 +8,9 @@ import { format } from 'common/stringUtils'
 export class Greeter extends BotExtension {
   private static GREETING_STRING: string = `Hi {0}! welcome to the cult. I am {1}, one of the bots taking care of things here!
 In an attempt to create a safe space and protect our members from grief, we have implemented a temporary 10 minute timeout for all new users.
-Feel free to take the time to take a look around and see what we are all about.
+Please note that due to some of content, and subject matters regularly present this is strictly an 18+ community, and we will take measures to remove members who break this rule
+
+With that in mind, feel free to take the time to take a look around and see what we are all about.
 When the time out is lifted, be sure to check out the #channel-roles channel and add pronouns if you wish!
 Have fun!!!`
 
