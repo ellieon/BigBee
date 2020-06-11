@@ -6,7 +6,7 @@ import { format } from 'common/stringUtils'
 
 @Extension.register
 export class Greeter extends BotExtension {
-  private static GREETING_STRING: string = `Hi {0}! welcome to the cult. I am {1}, one of the bots taking care of things here!
+  private static GREETING_STRING: string = `Hi {0}! welcome to the cult. I am {1}, one of the bots taking care of things around here!
 In an attempt to create a safe space and protect our members from grief, we have implemented a temporary 10 minute timeout for all new users.
 Please note that due to some of content, and subject matters regularly present this is strictly an 18+ community, and we will take measures to remove members who break this rule
 
