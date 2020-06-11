@@ -38,6 +38,10 @@ describe('Bottom Command', function () {
     it('should trigger when `>_<` is typed', async function () {
       await checkAndAssertMatches('>_<')
     })
+
+    it('should trigger when `😤` is typed', async function () {
+      await checkAndAssertMatches('😤')
+    })
   })
 
   describe('Should not trigger', function () {
