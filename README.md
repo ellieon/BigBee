@@ -1,10 +1,10 @@
 # Everybody knows.....
-It's Big Dick Bee, a Discord bot developed for Node.js with Typescript initially designed for Spotify control of a 
+It's BigBee, a Discord bot developed for Node.js with Typescript initially designed for Spotify control of a 
 connected user by other members of the Discord.
 
 
 ## Requirements
-You will need each of the following installed to be able to set up a development environment for BDB:
+You will need each of the following installed to be able to set up a development environment for BB:
 - Node.js - `12.0.10` or greater
 - A PostgreSQL database  - `9.5` you will need to provide a valid connection string with a database and user with permissions for this application to manipulate
 
@@ -14,16 +14,16 @@ You will also need developer accounts for the following, with an application cre
 
 ## Environment Variables
 The following environment variables must be set and accessible to BDB:
-- `BEE_DISCORD_CLIENT_ID` - Your Discord BDB application client ID
-- `BEE_DISCORD_CLIENT_SECRET` - Your Discord BDB application client secret
-- `BEE_DISCORD_BOT_TOKEN` - The token for the bot you have created in your BDB Discord app that this server will log in with.
-- `BEE_SPOTIFY_CLIENT_ID` - Your Spotify BDB application client ID
-- `BEE_SPOTIFY_CLIENT_SECRET` - Your Spotify BDB application client secret
-- `BEE_URL` - The base URL that the BDB frontend will sit on, this is used to generate callbacks
+- `BEE_DISCORD_CLIENT_ID` - Your Discord BB application client ID
+- `BEE_DISCORD_CLIENT_SECRET` - Your Discord BB application client secret
+- `BEE_DISCORD_BOT_TOKEN` - The token for the bot you have created in your BB Discord app that this server will log in with.
+- `BEE_SPOTIFY_CLIENT_ID` - Your Spotify BB application client ID
+- `BEE_SPOTIFY_CLIENT_SECRET` - Your Spotify BB application client secret
+- `BEE_URL` - The base URL that the BB frontend will sit on, this is used to generate callbacks
 - `BEE_ENV` - `[PROD|DEV]` the current environment for BDB
 - `BEE_LOGGING_LEVEL` - `[info|debug]` the output level for logging, info being the core, debug being more verbose
 - `DATABASE_URL`= The connection string of a PostgreSQL database for this application to use 
-    eg: `postgresql://big_dick_bee:big_dick_bee@localhost:5432/big_dick_bee`
+    eg: `postgresql://big_bee:big_bee@localhost:5432/big_bee`
 - `PORT` - (Defaults to 3000) The port for the frontend application to bind to
 - `BEE_JWT_SECRET` - The secret to use for signing JWT tokens
 - `BEE_GREETER_CHANNEL` - The discord channel to fallback the greeter extension to when it can't DM a user
@@ -36,7 +36,7 @@ Run `npm install` followed by `npm run start-dev` to run the application under `
 To run a pre-transpiled version of the server just run `npm run start`
 
 ## Database migration
-BDB will automatically attempt to perform database migration to do initial setup of the database for application use.
+BB will automatically attempt to perform database migration to do initial setup of the database for application use.
 The migration scripts are run automatically as part of the above start up and are located in the `migrations` folder of 
 the project directory.
  
