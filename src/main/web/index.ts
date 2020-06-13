@@ -15,8 +15,8 @@ import { EnvironmentHelper } from 'common/environmentHelper'
 export const app: express.Application = express()
 export let server
 
-const port = process.env.PORT || 443
-const httpPort = process.env.HTTP_PORT || 80
+const httpsPort = process.env.HTTPS_PORT || 443
+const httpPort = process.env.PORT || 80
 
 app.use(function (req, res, next) {
   if (!req.secure) {
@@ -52,12 +52,11 @@ if (EnvironmentHelper.isDevelopmentMode()) {
     key: key,
     cert: cert
   }, this.app)
-    .listen(port, () => logger.info(`Server is listening on port ${port}`))
+    .listen(httpsPort, () => logger.info(`Server is listening on port ${httpsPort}`))
   server.on('close', () => {
     httpServer.close()
   })
 } else {
   server = http.createServer(this.app)
-    .listen(port, () => logger.info(`Server is listening on port ${port}`))
-  this.app.listen(port, () => logger.info(`Server is listening on port ${port}`))
+    .listen(httpPort, () => logger.info(`Server is listening on port ${httpPort}`))
 }
