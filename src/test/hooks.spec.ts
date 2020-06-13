@@ -1,6 +1,7 @@
 import * as logger from 'winston'
 import { MockSpotifyHelper } from './helper/mockSpotifyHelper'
 import { server } from 'web/index'
+import { expect } from 'chai'
 
 process.env.NODE_TLS_REJECT_UNAUTHORIZED = '0'
 
@@ -10,6 +11,10 @@ before(() => {
     silent: true
   }))
   MockSpotifyHelper.createMockSpotifyHelper()
+})
+
+it('should run this test', () => {
+  expect(true).to.be.equal(true)
 })
 
 after(async () => {
