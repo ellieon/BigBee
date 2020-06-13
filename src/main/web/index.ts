@@ -18,8 +18,16 @@ export let server
 const httpsPort = process.env.HTTPS_PORT || 443
 const httpPort = process.env.PORT || 80
 
+function shouldRedirect (req: express.Request): boolean {
+  if (EnvironmentHelper.isDevelopmentMode()) {
+    return req.protocol === 'http'
+  } else {
+    return req.header('X-Forwarded-Proto') === 'http'
+  }
+}
+
 app.use(function (req, res, next) {
-  if (req.protocol === 'http') {
+  if (shouldRedirect(req)) {
     return res.redirect(['https://', req.get('Host'), req.url].join(''))
   }
   next()

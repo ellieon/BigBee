@@ -16,5 +16,16 @@ describe('Index page', async () => {
         .get('/')
         .expect(200)
     })
+
+    it('Should redirect to HTTPS when X-Forwarded-Proto is http', async () => {
+      process.env.BEE_ENV = 'prod'
+      const data = await request(server.httpServer)
+        .get('/')
+        .set('X-Forwarded-Proto', 'http')
+        .expect(302)
+      process.env.BEE_ENV = 'debug'
+      expect(data.header.location).to.contain('https://')
+
+    })
   })
 })
