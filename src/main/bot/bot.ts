@@ -1,5 +1,5 @@
 import * as DiscordClient from 'discord.js'
-import { EnvironmentHelper, EnvironmentHelper as env } from 'common/environmentHelper'
+import { EnvironmentHelper as env } from 'common/environmentHelper'
 import { BaseCommand, Command } from 'bot/commands/command'
 import { BotExtension, Extension } from 'bot/extensions/botExtension'
 
@@ -11,15 +11,6 @@ export class BeeBot {
 
   async init (client: DiscordClient.Client) {
     this.bot = client
-    logger.remove(logger.transports.Console)
-    logger.add(new logger.transports.Console({
-      silent: process.env.NODE_ENV === 'test'
-    }), {
-      colorize: true
-    })
-
-    logger.level = EnvironmentHelper.getLoggingLevel()
-    logger.info(`Log level set to ${EnvironmentHelper.getLoggingLevel()}`)
 
     this.bot.on('ready', () => {
       logger.info('Connected')
