@@ -1,5 +1,5 @@
 import * as logger from 'winston'
-import { MockSpotifyHelper } from './helper/mockSpotifyHelper'
+import { MockSpotifyHelper } from '../../helper/mockSpotifyHelper'
 import { server } from 'web/index'
 import { expect } from 'chai'
 
