@@ -5,15 +5,6 @@ import { DiscordTestHelper } from '../../../helper/discordTestingHelper'
 import { ImportMock } from 'ts-mock-imports'
 import { MockSpotifyHelper } from '../../../helper/mockSpotifyHelper'
 import { Message } from 'discord.js'
-import * as logger from 'winston'
-
-before(() => {
-  logger.remove(logger.transports.Console)
-  logger.add(new logger.transports.Console({
-    silent: true
-  }))
-  MockSpotifyHelper.createMockSpotifyHelper()
-})
 
 describe('Queue Command', function () {
   let queue: QueueSong
