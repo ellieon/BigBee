@@ -53,6 +53,8 @@ if (EnvironmentHelper.isDevelopmentMode()) {
     cert: cert
   }, this.app)
     .listen(httpsPort, () => logger.info(`Server is listening on port ${httpsPort}`))
+
+  server.httpServer = httpServer
   server.on('close', () => {
     httpServer.close()
   })

@@ -5,7 +5,7 @@ import { server } from 'web/index'
 describe('Index page', async () => {
   describe('On GET', async () => {
     it('should redirect to HTTPS when HTTP is attempted to be accessed', async () => {
-      const data = await request('http://127.0.0.1')
+      const data = await request(server.httpServer)
         .get('/')
         .expect(302)
       expect(data.header.location).to.contain('https://')
