@@ -19,7 +19,7 @@ const httpsPort = process.env.HTTPS_PORT || 443
 const httpPort = process.env.PORT || 80
 
 app.use(function (req, res, next) {
-  if (!req.secure) {
+  if (req.protocol === 'http') {
     return res.redirect(['https://', req.get('Host'), req.url].join(''))
   }
   next()
