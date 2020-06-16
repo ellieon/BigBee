@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import { BaseCommand, Command } from 'bot/commands/command'
 
-const COMMAND_STRING = /^bee!transRights$/
+const COMMAND_STRING = /^bee!transrights$/
 const NAME = 'Trans Rights'
 const DESCRIPTION = 'TRANS RIGHTS!'
 

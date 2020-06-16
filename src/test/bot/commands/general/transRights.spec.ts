@@ -23,11 +23,13 @@ describe('Echo Command', function () {
     })
 
     it('when message starts with "bee!transrights" and contains other text', async function () {
-      await checkAndAssertMatches('bee!transrights and some other text')
+      const message = DiscordTestHelper.createMockMessage('bee!transrights and some other text')
+      assert.isFalse(rights.checkTrigger(message))
     })
 
     it('when message contains "bee!transrights"', async function () {
-      await checkAndAssertMatches('There is some other text here and bee!transrights just happens to appear in it ')
+      const message = DiscordTestHelper.createMockMessage('There is some other text here and bee!transrights just happens to appear in it ')
+      assert.isFalse(rights.checkTrigger(message))
     })
   })
 
