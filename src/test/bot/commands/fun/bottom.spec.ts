@@ -42,6 +42,9 @@ describe('Bottom Command', function () {
     it('should trigger when `😤` is typed', async function () {
       await checkAndAssertMatches('😤')
     })
+    it('should trigger when `≥.≤` is typed', async function () {
+      await checkAndAssertMatches('😤')
+    })
   })
 
   describe('Should not trigger', function () {
