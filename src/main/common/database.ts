@@ -18,6 +18,15 @@ export class UserID {
   user_id: string
 }
 
+export class BottomScore {
+  name: string
+  score: number
+}
+export class BottomSettings{
+  trigger: string[]
+  score: BottomScore[]
+}
+
 export class DatabaseHelper {
 
   private static readonly CREATE_UPDATE: string = `
@@ -32,6 +41,11 @@ export class DatabaseHelper {
       `SELECT * FROM spotify_connections`
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
+  private static readonly GET_BOTTOM_SETTINGS: string = `SELECT * FROM bottom WHERE guild_id=$1`
+  private static readonly SET_BOTTOM_SETTINGS: string = `UPDATE bottom SET trigger ='$1' WHERE guild_id=$2;
+                                                        INSERT INTO table (id, field, field2)
+                                                            SELECT guild_id,'$1', '{}'
+                                                        WHERE NOT EXISTS (SELECT 1 FROM table WHERE guild_id=$2)`
 
   private static instance: DatabaseHelper
 
@@ -102,4 +116,13 @@ export class DatabaseHelper {
     return this.pool.query(DatabaseHelper.DELETE_USERS, [userId]).catch(logger.error)
   }
 
+  async getBottomSettingsForGuild (guildId: string): Promise<BottomSettings> {
+    const res = await this.pool.query(DatabaseHelper.GET_BOTTOM_SETTINGS).catch(logger.error)
+
+    if (res.rows.length === 1) {
+      return res.rows[0]
+    } else {
+      return undefined
+    }
+  }
 }
