@@ -1,7 +1,7 @@
 import * as DiscordClient from 'discord.js'
 import { BaseCommand, Command } from 'bot/commands/command'
 
-const COMMAND_STRING = /🥺|👉👈|👉 👈|>\.<|>_<|😤≥.≤/
+const COMMAND_STRING = /🥺|👉👈|👉 👈|>\.<|>_<|😤|≥.≤/
 const NAME = 'super secret command'
 const DESCRIPTION = 'Triggers for the majority of this server'
 
