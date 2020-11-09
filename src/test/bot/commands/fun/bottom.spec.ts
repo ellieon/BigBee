@@ -43,10 +43,10 @@ describe('Bottom Command', function () {
       await checkAndAssertMatches('😤')
     })
     it('should trigger when `≥.≤` is typed', async function () {
-      await checkAndAssertMatches('😤')
+      await checkAndAssertMatches('≥.≤')
     })
     it('should trigger when `:AmyBrat:` is typed', async function () {
-      await checkAndAssertMatches('😤')
+      await checkAndAssertMatches('<:AmyBrat:775351028371030016>')
     })
   })
 
