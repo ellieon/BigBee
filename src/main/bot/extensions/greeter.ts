@@ -21,6 +21,7 @@ Have fun!!!`
   }
 
   private greeter (member: GuildMember | PartialGuildMember) {
+    logger.info(`Sending message to guild member with id <@!${member.id}>`)
     member.user
       .send(format(Greeter.GREETING_STRING, `<@!${member.id}>`, `<@!${this.getClient().user.id}>`))
       .catch(() => {
