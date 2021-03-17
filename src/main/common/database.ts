@@ -36,7 +36,7 @@ export class DatabaseHelper {
   private static instance: DatabaseHelper
 
   readonly pool = new Pool({
-    connectionString: env.getDatabaseURL() + '?ssl=true'
+    connectionString: env.getDatabaseURL()
   })
 
   private constructor () {
