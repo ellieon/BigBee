@@ -24,7 +24,7 @@
     "winston": "^3.2.1"
   },
   "scripts": {
-    "start": "db-migrate up && node -r tsconfig-paths/register server.js --trace-warnings",
+    "start": "node -r tsconfig-paths/register server.js --trace-warnings",
     "build": "tsc",
     "build_start": "npm run build && npm run start",
     "clean": "tsc --build --clean",
