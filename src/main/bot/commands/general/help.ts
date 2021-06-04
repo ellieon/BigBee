@@ -14,6 +14,9 @@ export class Help extends BaseCommand {
   async execute (message: DiscordClient.Message): Promise<void> {
     let helpText = `I am <@${this.getClient().user.id}>, obviously the best Discord bot ever created, The following commands are available: \`\`\``
     for (const command of this.getBot().getCommands()) {
+      if (command.getName().trim().length === 0) {
+        continue
+      }
       helpText += `\n`
       helpText += `${command.getName()} | ${command.getDescription()}`
     }
