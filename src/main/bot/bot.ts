@@ -27,10 +27,13 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
-    await this.bot.login(env.getDiscordBotToken())
+
 
     this.addCommands()
     this.addExtensions()
+
+    await this.bot.login(env.getDiscordBotToken())
+
   }
 
   addCommands (): void {

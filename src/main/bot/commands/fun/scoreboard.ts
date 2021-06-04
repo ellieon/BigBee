@@ -15,6 +15,7 @@ export class Scoreboard extends BaseCommand {
   async execute (message: DiscordClient.Message): Promise<void> {
     const results = await DatabaseHelper.getInstance().getScoreboardValues()
     const bottoms = []
+    let longestLength = 0
     for (let result of results) {
       let name = 'Unknown'
       try {
@@ -23,6 +24,7 @@ export class Scoreboard extends BaseCommand {
           continue
         }
         name = user.username
+        longestLength = Math.max(longestLength, name.length)
         bottoms.push({ name: name, count: result.count })
       } catch {
         logger.error(`Unable to find userId: ${result.user_id}`)

@@ -41,6 +41,11 @@ export class DatabaseHelper {
   private static readonly GET_SCOREBOARD: string =
       `SELECT * FROM scoreboard`
 
+  private static readonly SET_BACKLOG: string =
+      `insert into config (key, value) VALUES ('backlog', 'done')`
+
+  private static readonly GET_BACKLOG: string =
+      `SELECT * FROM config where key = 'backlog'`
   private static instance: DatabaseHelper
 
   readonly pool = new Pool({
@@ -105,6 +110,16 @@ export class DatabaseHelper {
   async incrementScoreBoardForUser (userId: string) {
     logger.debug(`DatabaseHelper: update score for user, userId:${userId}`)
     return this.pool.query(DatabaseHelper.UPDATE_SCOREBOARD, [userId])
+  }
+
+  async markBacklogDone () {
+    logger.debug(`Marking backlog done`)
+    return this.pool.query(DatabaseHelper.SET_BACKLOG)
+  }
+
+  async isBacklogDone () {
+    const results = await this.pool.query(DatabaseHelper.GET_BACKLOG)
+    return results.rows.length === 1
   }
 
   async getScoreboardValues () {
