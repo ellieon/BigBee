@@ -21,7 +21,7 @@ export class UserID {
 export class DatabaseHelper {
 
   private static readonly CREATE_UPDATE: string = `
-    INSERT INTO spotify_connections VALUES ($1, $2, $3, $4)
+    INSERT INTO spotify_connections VALUES ($1, $2, $3, $4
         ON CONFLICT (user_id) DO
         UPDATE SET connection_token = $2, refresh_token = $3, expires = $4
    `
@@ -32,6 +32,14 @@ export class DatabaseHelper {
       `SELECT * FROM spotify_connections`
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
+
+  private static readonly UPDATE_SCOREBOARD = `
+    INSERT INTO scoreboard VALUES ($1, 1)
+        ON CONFLICT (user_id) DO
+        UPDATE SET count = scoreboard.count + 1`
+
+  private static readonly GET_SCOREBOARD: string =
+      `SELECT * FROM scoreboard`
 
   private static instance: DatabaseHelper
 
@@ -92,6 +100,15 @@ export class DatabaseHelper {
     logger.debug(`DatabaseHelper: update spotify key for user, userId:${userId}, connection_token:${connectionToken}, expires:${expires}`)
     return this.pool.query('UPDATE spotify_connections SET user_id = $1, connection_token = $2, expires = $3 WHERE user_id = $1',
       [userId, connectionToken, expires.toISOString()])
+  }
+
+  async incrementScoreBoardForUser (userId: string) {
+    logger.debug(`DatabaseHelper: update score for user, userId:${userId}`)
+    return this.pool.query(DatabaseHelper.UPDATE_SCOREBOARD, [userId])
+  }
+
+  async getScoreboardValues () {
+    return (await this.pool.query(DatabaseHelper.GET_SCOREBOARD).catch(logger.error)).rows
   }
 
   async getAllUserIds (): Promise<UserID[]> {
