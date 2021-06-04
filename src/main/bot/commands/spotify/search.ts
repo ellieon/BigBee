@@ -4,7 +4,7 @@ import { SpotifyHelper } from 'common/spotifyHelper'
 import * as logger from 'winston'
 
 const COMMAND_STRING = /^bee!search(?:\s(?<songName>.+))?$/
-const NAME = 'bee!search search <song name>'
+const NAME = 'bee!search <song name>'
 const DESCRIPTION = 'Searches for a song on Spotify and echoes the result'
 
 @Command.register
