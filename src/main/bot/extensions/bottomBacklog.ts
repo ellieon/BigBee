@@ -1,11 +1,12 @@
 import { Guild, TextChannel } from 'discord.js'
-import { BotExtension, Extension } from 'bot/extensions/botExtension'
+import { BotExtension } from 'bot/extensions/botExtension'
 import * as logger from 'winston'
 import { DatabaseHelper } from 'common/database'
 
-const COMMAND_STRING = /🥺|👉👈|👉 👈|>\.<|>_<|😤|≥\.≤|:amybrat:|:bratrachloe:/
-
-@Extension.register
+const COMMAND_STRING = /🥺|👉👈|👉 👈|>\.<|>_<|😤|≥\.≤|:amybrat:/
+/* This is a legacy script that was designed to be run once then removed, the code will be left here in case it is needed
+// again, just uncomment the line below and it will run on startup */
+// @Extension.register
 export class BottomBacklog extends BotExtension {
 
   public init (): void {
