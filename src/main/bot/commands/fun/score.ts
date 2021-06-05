@@ -17,9 +17,10 @@ export class Score extends BaseCommand {
     if (matches.groups.userId) {
       const count: number = await DatabaseHelper.getInstance().getScoreForUser(matches.groups.userId)
       message.channel.send(`<@!${matches.groups.userId}> has been a bottom ${count} times!`)
-
+      await this.checkReactMessage(message)
     } else {
       await message.channel.send(`Please tag a user, (bee!bottom @user)`)
+      await this.crossReactMessage(message)
     }
   }
 }

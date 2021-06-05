@@ -50,6 +50,7 @@ export class Scoreboard extends BaseCommand {
       table += '```'
       table += `Congratulations ${bottoms[0].name} you are the top of the bottoms 🍑👑`
       await message.channel.send(table)
+      await this.checkReactMessage(message)
     }
   }
 }
