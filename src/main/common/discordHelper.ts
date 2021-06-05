@@ -15,7 +15,7 @@ const userCache: DiscordClient.User[] = []
 export class DiscordHelper {
   private static instance: DiscordHelper
 
-  client = new DiscordClient.Client()
+  client = undefined
 
   private constructor () {
   }
@@ -51,5 +51,9 @@ export class DiscordHelper {
     } else {
       return userCache[userId]
     }
+  }
+
+  public setClient (client) {
+    this.client = client
   }
 }

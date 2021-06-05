@@ -11,7 +11,8 @@ export class BeeBot {
   private registeredCommands: BaseCommand[] = []
 
   async init (client: DiscordClient.Client) {
-    this.bot = DiscordHelper.getInstance().client
+    this.bot = client
+    DiscordHelper.getInstance().setClient(client)
 
     this.bot.on('ready', () => {
       logger.info('Connected')
@@ -31,7 +32,6 @@ export class BeeBot {
     this.addExtensions()
 
     await this.bot.login(env.getDiscordBotToken())
-
   }
 
   addCommands (): void {

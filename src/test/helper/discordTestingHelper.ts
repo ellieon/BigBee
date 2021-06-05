@@ -1,4 +1,4 @@
-import { Client, ClientUser, Message, TextChannel } from 'discord.js'
+import {Client, ClientUser, Message, TextChannel, User} from 'discord.js'
 import * as sinon from 'sinon'
 import { BeeBot } from 'bot/bot'
 
@@ -9,7 +9,8 @@ export class DiscordTestHelper {
     let message: Message = sinon.createStubInstance(Message)
     sinon.stub(message, 'guild').value(sinon.createStubInstance(Message))
     message.content = content
-
+    message.author = sinon.createStubInstance(User)
+    message.author.id = this.MOCK_USER_ID
     message.channel = sinon.createStubInstance(TextChannel)
     message.channel.send = sinon.spy()
     return message
