@@ -1,4 +1,4 @@
-import {Client, ClientUser, Message, TextChannel, User} from 'discord.js'
+import { Client, ClientUser, Message, TextChannel, User } from 'discord.js'
 import * as sinon from 'sinon'
 import { BeeBot } from 'bot/bot'
 

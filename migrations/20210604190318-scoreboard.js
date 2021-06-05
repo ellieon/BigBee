@@ -28,6 +28,7 @@ exports.up = function(db) {
 };
 
 exports.down = function(db) {
+  db.dropTable('scoreboard')
   return null;
 };
 
