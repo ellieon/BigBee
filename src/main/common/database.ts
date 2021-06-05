@@ -41,6 +41,9 @@ export class DatabaseHelper {
   private static readonly GET_SCOREBOARD: string =
       `SELECT * FROM scoreboard`
 
+  private static readonly GET_SCORE: string =
+      `SELECT * FROM scoreboard WHERE user_id=$1`
+
   private static readonly SET_BACKLOG: string =
       `insert into config (key, value) VALUES ('backlog', 'done')`
 
@@ -123,6 +126,26 @@ export class DatabaseHelper {
 
   async getScoreboardValues () {
     return (await this.pool.query(DatabaseHelper.GET_SCOREBOARD).catch(logger.error)).rows
+  }
+
+  async getScoreForUser (userId: string): Promise<number> {
+    logger.debug(`DatabaseHelper: get score for user ${userId}`)
+    try {
+      const res =
+        await this.pool.query(
+            DatabaseHelper.GET_SCORE, [userId])
+      if (res.rows.length === 0) {
+        logger.debug(`DatabaseHelper: found no user`)
+        return 0
+      } else {
+        logger.debug(`DatabaseHelper: found a user`)
+        const row = res.rows[0]
+        return row.count
+      }
+    } catch (e) {
+      logger.error(e)
+      return 0
+    }
   }
 
   async getAllUserIds (): Promise<UserID[]> {
