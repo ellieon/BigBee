@@ -15,31 +15,21 @@ exports.setup = function(options, seedLink) {
 };
 
 exports.up = function(db) {
-  db.createTable('spotify_connections', {
+  db.createTable('scoreboard', {
     user_id: {
       type: 'text',
       primaryKey: true
     },
-    connection_token: {
-      type: 'text',
-    },
-    refresh_token: {
-      type: 'text'
-    },
-    expires: {
-      type: 'text'
-    }}).then(() => {
-    db.insert('spotify_connections', ['user_id'], ['1'])
-  })
-
+    count: {
+      type: 'int'
+    }})
 
   return null;
 };
 
 exports.down = function(db) {
-  db.dropTable('spotify_connections')
-
-  return null
+  db.dropTable('scoreboard')
+  return null;
 };
 
 exports._meta = {

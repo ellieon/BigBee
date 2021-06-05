@@ -34,6 +34,7 @@ exports.up = function (db) {
 
 exports.down = function (db) {
     db.dropTable('config')
+    return null
 };
 
 exports._meta = {

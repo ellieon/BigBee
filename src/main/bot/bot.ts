@@ -2,6 +2,7 @@ import * as DiscordClient from 'discord.js'
 import { EnvironmentHelper as env } from 'common/environmentHelper'
 import { BaseCommand, Command } from 'bot/commands/command'
 import { BotExtension, Extension } from 'bot/extensions/botExtension'
+import { DiscordHelper } from 'common/discordHelper'
 
 const logger = require('winston')
 
@@ -11,6 +12,7 @@ export class BeeBot {
 
   async init (client: DiscordClient.Client) {
     this.bot = client
+    DiscordHelper.getInstance().setClient(client)
 
     this.bot.on('ready', () => {
       logger.info('Connected')
@@ -26,10 +28,10 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
-    await this.bot.login(env.getDiscordBotToken())
-
     this.addCommands()
     this.addExtensions()
+
+    await this.bot.login(env.getDiscordBotToken())
   }
 
   addCommands (): void {

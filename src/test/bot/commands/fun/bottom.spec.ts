@@ -2,6 +2,7 @@ import { Bottom } from 'bot/commands/fun/bottom'
 import * as sinon from 'sinon'
 import { assert, expect } from 'chai'
 import { DiscordTestHelper } from '../../../helper/discordTestingHelper'
+import * as database from '../../../helper/databaseTestingHelper'
 
 describe('Bottom Command', function () {
   let bottom: Bottom
@@ -65,6 +66,7 @@ describe('Bottom Command', function () {
     const message = DiscordTestHelper.createMockMessage('🥺')
     await bottom.execute(message)
     expect((message.react as sinon.spy).callCount).to.equal(6)
+    sinon.assert.calledWith(database.databaseHelperMock.incrementScoreBoardForUser, message.author.id)
   })
 
   async function checkAndAssertMatches (content: string) {
