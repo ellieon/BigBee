@@ -45,7 +45,7 @@ export class QueueSong extends BaseCommand {
       if (matches.groups.userId) {
         users = [this.helper.getConnectionForUser(matches.groups.userId)]
       } else {
-        users = this.helper.getAllConnections()
+        users = SpotifyHelper.getInstance().getAllConnections()
       }
 
       let name: string = undefined

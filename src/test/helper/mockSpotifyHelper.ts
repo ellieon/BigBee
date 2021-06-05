@@ -1,6 +1,6 @@
-import { ImportMock } from 'ts-mock-imports'
 import * as DatabaseHelper from 'common/database'
 import * as sinon from 'sinon'
+import * as database from './databaseTestingHelper'
 
 export class MockSpotifyHelper {
 
@@ -73,12 +73,8 @@ export class MockSpotifyHelper {
   }
 
   static createMockSpotifyHelper () {
-
-    let databaseHelper = sinon.createStubInstance(DatabaseHelper.DatabaseHelper)
-    databaseHelper.getAllSpotifyKeys.returns(this.mockConnectionData)
-    let dataBaseMock = ImportMock.mockStaticClass(DatabaseHelper, 'DatabaseHelper')
-    dataBaseMock.mock('getInstance', databaseHelper)
-
+    database.databaseHelperMock.getAllSpotifyKeys = sinon.mock()
+    database.databaseHelperMock.getAllSpotifyKeys.returns(this.mockConnectionData)
     this.setupSpotifyApi()
     this.setupRequest()
   }

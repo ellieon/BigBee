@@ -30,6 +30,7 @@ export class DatabaseHelper {
 
   private static readonly GET_KEYS: string =
       `SELECT * FROM spotify_connections`
+
   private static readonly GET_USERS: string = `SELECT user_id FROM spotify_connections`
   private static readonly DELETE_USERS: string = `DELETE from spotify_connections WHERE user_id=$1`
 
