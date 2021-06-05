@@ -38,7 +38,7 @@ export class Scoreboard extends BaseCommand {
       let place = 1
       for (let bottom of bottoms) {
         table += `\n|${place.toString().padStart(3)}|${bottom.name}${' '.repeat(longestLength - bottom.name.length)}|${bottom.count.toString().padStart(5)}|`
-        if (place < bottoms.length) {
+        if (place < 10) {
           table += `\n|---+${'-'.repeat(longestLength)}+-----|`
         }
         place++
