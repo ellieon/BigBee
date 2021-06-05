@@ -33,7 +33,7 @@ export class Scoreboard extends BaseCommand {
 
     if (bottoms.length > 0) {
       bottoms.sort((a, b) => b.count - a.count)
-      let table: string = 'Here is the current leaderboard:\n```\n'
+      let table: string = 'Here are the top 10 bottoms:\n```\n'
       table += `+---+${'-'.repeat(longestLength)}+-----+`
       let place = 1
       for (let bottom of bottoms) {
@@ -42,6 +42,9 @@ export class Scoreboard extends BaseCommand {
           table += `\n|---+${'-'.repeat(longestLength)}+-----|`
         }
         place++
+        if (place > 10) {
+          break
+        }
       }
       table += `\n+---+${'-'.repeat(longestLength)}+-----+`
       table += '```'
