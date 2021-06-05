@@ -50,6 +50,16 @@ export class DatabaseHelper {
 
   private static readonly GET_BACKLOG: string =
       `SELECT * FROM config where key = 'backlog'`
+
+  private static readonly GET_TRIGGERS: string =
+      `SELECT value from config where key = 'triggers'`
+
+  private static readonly SET_TRIGGERS: string =
+      `UPDATE config SET value=$1 WHERE key = 'triggers'`
+
+  private static readonly GET_BEE_ADMINS: string =
+      `SELECT value from config where key = 'admins'`
+
   private static instance: DatabaseHelper
 
   readonly pool = new Pool({
@@ -157,4 +167,22 @@ export class DatabaseHelper {
     return this.pool.query(DatabaseHelper.DELETE_USERS, [userId]).catch(logger.error)
   }
 
+  async getTriggers (): Promise<string[]> {
+    const triggers = (await this.pool.query(DatabaseHelper.GET_TRIGGERS).catch(logger.error)).rows[0].value
+    return JSON.parse(triggers)
+  }
+
+  async getBeeAdmins (): Promise<string[]> {
+    const res = (await this.pool.query(DatabaseHelper.GET_BEE_ADMINS).catch(logger.error))
+    if (res.rows.length > 0) {
+      return JSON.parse(res.rows[0].value)
+    } else {
+      return []
+    }
+  }
+
+  async pushNewTriggers (triggers: string): Promise<any> {
+    logger.debug(`DatabaseHelper: Updating trigger array ${triggers}`)
+    return this.pool.query(DatabaseHelper.SET_TRIGGERS, [triggers]).catch(logger.error)
+  }
 }

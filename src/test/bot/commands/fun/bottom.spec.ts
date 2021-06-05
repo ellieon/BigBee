@@ -9,45 +9,12 @@ describe('Bottom Command', function () {
 
   beforeEach(() => {
     bottom = new Bottom()
+    database.databaseHelperMock.getTriggers.returns(['🥺'])
   })
 
   describe('Should trigger', function () {
-    it('when message only says "🥺"', async function () {
+    it('when message contains one of the trigger emoji', async function () {
       await checkAndAssertMatches('🥺')
-    })
-
-    it('when message starts with "🥺" and contains other text', async function () {
-      await checkAndAssertMatches('🥺')
-    })
-
-    it('when message contains "🥺"', async function () {
-      await checkAndAssertMatches('There is some other text here and 🥺 just happens to appear in it ')
-    })
-
-    it(`when message contains "👉👈"`, async function () {
-      await checkAndAssertMatches('👉👈')
-    })
-
-    it(`when message contains "👉👈" and "🥺"`, async function () {
-      await checkAndAssertMatches('👉👈🥺')
-    })
-
-    it('should trigger when `>.<` is typed', async function () {
-      await checkAndAssertMatches('>.<')
-    })
-
-    it('should trigger when `>_<` is typed', async function () {
-      await checkAndAssertMatches('>_<')
-    })
-
-    it('should trigger when `😤` is typed', async function () {
-      await checkAndAssertMatches('😤')
-    })
-    it('should trigger when `≥.≤` is typed', async function () {
-      await checkAndAssertMatches('≥.≤')
-    })
-    it('should trigger when `:AmyBrat:` is typed', async function () {
-      await checkAndAssertMatches('<:AmyBrat:775351028371030016>')
     })
   })
 
@@ -62,9 +29,43 @@ describe('Bottom Command', function () {
     })
   })
 
+  describe('Add trigger', function () {
+    it('when a user is an admin, it should add the provided trigger to the database', async function () {
+      const message = DiscordTestHelper.createMockMessage('bee!bottom-add word')
+      database.databaseHelperMock.getBeeAdmins.returns([DiscordTestHelper.MOCK_USER_ID])
+      await bottom.execute(message, message.content)
+      sinon.assert.calledWith(database.databaseHelperMock.pushNewTriggers,'["🥺","word"]')
+    })
+
+    it('when a user is not an admin, it should not add the trigger to the database',async function () {
+      const message = DiscordTestHelper.createMockMessage('bee!bottom-add word')
+      database.databaseHelperMock.pushNewTriggers.reset()
+      database.databaseHelperMock.getBeeAdmins.returns(['Some user'])
+      await bottom.execute(message, message.content)
+      assert(database.databaseHelperMock.pushNewTriggers.notCalled)
+    })
+  })
+
+  describe('Remove trigger', function () {
+    it('when a user is an admin, it should remove the provided trigger from the database', async function () {
+      const message = DiscordTestHelper.createMockMessage('bee!bottom-remove 🥺')
+      database.databaseHelperMock.getBeeAdmins.returns([DiscordTestHelper.MOCK_USER_ID])
+      await bottom.execute(message, message.content)
+      sinon.assert.calledWith(database.databaseHelperMock.pushNewTriggers,'[]')
+    })
+
+    it('when a user is not an admin, it should not add the trigger to the database',async function () {
+      const message = DiscordTestHelper.createMockMessage('bee!bottom-remove word')
+      database.databaseHelperMock.pushNewTriggers.reset()
+      database.databaseHelperMock.getBeeAdmins.returns(['Some user'])
+      await bottom.execute(message, message.content)
+      assert(database.databaseHelperMock.pushNewTriggers.notCalled)
+    })
+  })
+
   it('should output the correct messages when the trigger is hit', async function () {
     const message = DiscordTestHelper.createMockMessage('🥺')
-    await bottom.execute(message)
+    await bottom.execute(message, message.content)
     expect((message.react as sinon.spy).callCount).to.equal(6)
     sinon.assert.calledWith(database.databaseHelperMock.incrementScoreBoardForUser, message.author.id)
   })
