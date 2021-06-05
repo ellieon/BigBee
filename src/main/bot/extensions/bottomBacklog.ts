@@ -26,8 +26,7 @@ export class BottomBacklog extends BotExtension {
         const channels = guild.channels.cache.map(channel => channel)
         for (let channel of channels) {
           if (channel instanceof TextChannel) {
-            let textChannel: TextChannel = channel as TextChannel
-            let messages = await this.lots_of_messages_getter(textChannel)
+            let messages = await this.lots_of_messages_getter(channel)
             for (let message of messages) {
               if (message.content.toLowerCase().match(COMMAND_STRING)) {
                 await DatabaseHelper.getInstance().incrementScoreBoardForUser(message.author.id)

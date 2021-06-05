@@ -27,8 +27,6 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
-
-
     this.addCommands()
     this.addExtensions()
 
