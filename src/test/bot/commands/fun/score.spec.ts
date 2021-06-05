@@ -32,7 +32,7 @@ describe('Score Command', function () {
     })
   })
 
-  describe('When triggered', function() {
+  describe('When triggered', function () {
     it('should output the usage message when the trigger is hit without a user', async function () {
       const message = DiscordTestHelper.createMockMessage('bee!bottom')
       await bottom.execute(message, message.content)
