@@ -33,7 +33,7 @@ export class Scoreboard extends BaseCommand {
 
     if (bottoms.length > 0) {
       bottoms.sort((a, b) => b.count - a.count)
-      let table: string = 'Here is the current bottom leaderboard:\n```\n'
+      let table: string = 'Here is the current leaderboard:\n```\n'
       table += `+---+${'-'.repeat(longestLength)}+-----+`
       let place = 1
       for (let bottom of bottoms) {
@@ -45,6 +45,7 @@ export class Scoreboard extends BaseCommand {
       }
       table += `\n+---+${'-'.repeat(longestLength)}+-----+`
       table += '```'
+      table += `Congratulations ${bottoms[0].name} you are the top of the bottoms 🍑👑`
       await message.channel.send(table)
     }
   }
