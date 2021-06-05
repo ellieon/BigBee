@@ -108,7 +108,6 @@ export class DatabaseHelper {
   }
 
   async incrementScoreBoardForUser (userId: string) {
-    logger.debug(`DatabaseHelper: update score for user, userId:${userId}`)
     return this.pool.query(DatabaseHelper.UPDATE_SCOREBOARD, [userId])
   }
 

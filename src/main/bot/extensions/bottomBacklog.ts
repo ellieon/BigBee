@@ -26,12 +26,15 @@ export class BottomBacklog extends BotExtension {
         const channels = guild.channels.cache.map(channel => channel)
         for (let channel of channels) {
           if (channel instanceof TextChannel) {
-            let messages = await this.lots_of_messages_getter(channel)
+            logger.info(`scanning channel ${channel.name}`)
+            let messages = await this.getAllMessagesForChannel(channel)
+            logger.info(`found ${messages.length} messages`)
             for (let message of messages) {
               if (message.content.toLowerCase().match(COMMAND_STRING)) {
                 await DatabaseHelper.getInstance().incrementScoreBoardForUser(message.author.id)
               }
             }
+            logger.info(`finished scanning ${channel.name}`)
           }
         }
       }
@@ -41,21 +44,22 @@ export class BottomBacklog extends BotExtension {
     }
   }
 
-  private async lots_of_messages_getter (channel, limit = 5000) {
-    let allMessages: any[] = []
-    let last
+  private async getAllMessagesForChannel (channel) {
+    const allMessages = []
+    let lastId
 
     while (true) {
       const options = { limit: 100, before: undefined }
-      if (last) {
-        options.before = last
+      if (lastId) {
+        options.before = lastId
       }
 
       const messages = await channel.messages.fetch(options)
       allMessages.push(...messages.array())
-      last = messages.last().id
+      lastId = messages.last().id
+      logger.info(`pulled ${allMessages.length} from ${channel.name}`)
 
-      if (messages.size !== 100 || allMessages.length >= limit) {
+      if (messages.size !== 100) {
         break
       }
     }
