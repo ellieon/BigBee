@@ -28,6 +28,10 @@ export class BeeBot {
       this.handleMessage(message)
     })
 
+    this.bot.on('messageUpdate', (message) => {
+      this.handleEditedMesasge(message)
+    })
+
     this.addCommands()
     this.addExtensions()
 
@@ -65,6 +69,16 @@ export class BeeBot {
     command.setClient(this.bot)
     command.setBot(this)
     this.registeredCommands.push(command)
+  }
+
+  async handleEditedMesasge (message: DiscordClient.PartialMessage | DiscordClient.Message): Promise<void> {
+    message.channel.messages.fetch(message.id, false, true)
+          .then(fullMessage => {
+            this.handleMessage(fullMessage)
+          })
+          .catch(error => {
+            logger.error(error)
+          })
   }
 
   handleMessage (message: DiscordClient.Message): void {
