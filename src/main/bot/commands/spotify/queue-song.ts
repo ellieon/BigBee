@@ -32,7 +32,7 @@ export class QueueSong extends BaseCommand {
         return
       }
 
-      const matches = content.match(COMMAND_STRING)
+      const matches = this.getMatches(message)
 
       const songName = matches.groups.songName
 
@@ -43,6 +43,13 @@ export class QueueSong extends BaseCommand {
 
       let users: SpotifyConnection[]
       if (matches.groups.userId) {
+        const user = this.helper.getConnectionForUser(matches.groups.userId)
+        if (user === undefined) {
+          await message.channel.send(`<@!${matches.groups.userId}> is not connected, run \`bee!connect\` to see how to join`)
+          await this.crossReactMessage(message)
+          return
+        }
+
         users = [this.helper.getConnectionForUser(matches.groups.userId)]
       } else {
         users = SpotifyHelper.getInstance().getAllConnections()
@@ -54,6 +61,7 @@ export class QueueSong extends BaseCommand {
 
       if (users.length === 0) {
         await message.channel.send('There are currently no registered spotify users')
+        await this.crossReactMessage(message)
         return
       }
 

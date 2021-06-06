@@ -87,7 +87,8 @@ export class BeeBot {
     }
 
     this.registeredCommands.forEach((c) => {
-      if (c.checkTrigger(message)) {
+      const matches = c.checkTrigger(message)
+      if (matches) {
         logger.info(`Executing command ${c.getName()}`)
         c.execute(message, message.content.toLowerCase())
           .then(() => logger.info(`Command executed ${c.getName()}`))
