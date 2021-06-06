@@ -16,7 +16,7 @@ export class Bottom extends BaseCommand {
   }
 
   async execute (message: DiscordClient.Message, content: string): Promise<void> {
-    const matches = content.match(this.trigger)
+    const matches = this.getMatches(message)
 
     if (matches.groups && matches.groups.trigger) {
       if (await Bottom.isUserAuthorised(message)) {

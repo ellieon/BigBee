@@ -12,7 +12,7 @@ export class Score extends BaseCommand {
 
   async execute (message: DiscordClient.Message, content: string): Promise<void> {
 
-    const matches = content.match(COMMAND_STRING)
+    const matches = this.getMatches(message)
 
     if (matches.groups.userId) {
       const count: number = await DatabaseHelper.getInstance().getScoreForUser(matches.groups.userId)

@@ -73,6 +73,11 @@ describe('Queue Command', function () {
         sinon.assert.notCalled(spotifyApi.addTracksToPlaylist)
         sinon.assert.calledWith(message.channel.send, `I was unable to find any tracks by the name invalid song name`)
       })
+
+      it('should send an error message if the user targeted isn`t connected', async function () {
+        const message = await checkAndAssertMatches(`bee!queue <@!12312312312312312> song name`)
+        sinon.assert.calledWith(message.channel.send, `<@!12312312312312312> is not connected, run \`bee!connect\` to see how to join`)
+      })
     })
   })
 

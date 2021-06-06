@@ -17,7 +17,7 @@ export class Search extends BaseCommand {
   }
 
   async execute (message: DiscordClient.Message, content: string): Promise<void> {
-    const params = content.match(COMMAND_STRING).groups.songName
+    const params = this.getMatches(message).groups.songName
 
     if (!params || params.length === 0) {
       message.channel.send('I need a song name to search `bee!search [search_term]`').catch(logger.error)

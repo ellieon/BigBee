@@ -63,6 +63,10 @@ export abstract class BaseCommand {
     return !!message.content.toLowerCase().match(this.getTrigger())
   }
 
+  getMatches (message: Message) {
+    return message.content.toLowerCase().match(this.getTrigger())
+  }
+
   getTrigger (): RegExp {
     return this.commandString
   }
@@ -96,6 +100,6 @@ export abstract class BaseCommand {
   }
 
   protected async crossReactMessage (message: Message) {
-    await message.react('❎')
+    await message.react('❌')
   }
 }
