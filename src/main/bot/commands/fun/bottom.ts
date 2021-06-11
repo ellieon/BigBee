@@ -3,7 +3,7 @@ import { BaseCommand, Command } from 'bot/commands/command'
 import { DatabaseHelper } from 'common/database'
 import * as logger from 'winston'
 
-const DEFAULT_COMMAND = '^bee!bottom-add\\s+?(?<trigger>\\S+)$|^bee!bottom-remove\\s+?(?<remove>\\S+)$'
+const DEFAULT_COMMAND = '^bee!bottom-add\\s+?(?<trigger>.+)$|^bee!bottom-remove\\s+?(?<remove>.+)$'
 
 @Command.register
 export class Bottom extends BaseCommand {
