@@ -22,6 +22,7 @@ export class BottomBacklog extends BotExtension {
       logger.info('Bottom backlog already done')
       return
     }
+
     try {
       for (let guild of guilds) {
         const channels = guild.channels.cache.map(channel => channel)
@@ -39,10 +40,11 @@ export class BottomBacklog extends BotExtension {
           }
         }
       }
-      await DatabaseHelper.getInstance().markBacklogDone()
+
     } catch (e) {
-      logger.error(e)
+      logger.error(JSON.stringify(e))
     }
+    await DatabaseHelper.getInstance().markBacklogDone()
   }
 
   private async getAllMessagesForChannel (channel) {
@@ -55,13 +57,17 @@ export class BottomBacklog extends BotExtension {
         options.before = lastId
       }
 
-      const messages = await channel.messages.fetch(options)
-      allMessages.push(...messages.array())
-      lastId = messages.last().id
-      logger.info(`pulled ${allMessages.length} from ${channel.name}`)
+      try {
+        const messages = await channel.messages.fetch(options)
+        allMessages.push(...messages.array())
+        lastId = messages.last().id
+        logger.info(`pulled ${allMessages.length} from ${channel.name}`)
 
-      if (messages.size !== 100) {
-        break
+        if (messages.size !== 100) {
+          break
+        }
+      } catch (e) {
+        logger.error(JSON.stringify(e))
       }
     }
 
