@@ -5,6 +5,7 @@ import { BeeBot } from 'bot/bot'
 export class DiscordTestHelper {
 
   public static readonly MOCK_USER_STRING = '<@!123456789123456782>'
+  public static readonly MOCK_MOBILE_USER_STRING = '<@123456789123456782>'
   public static readonly MOCK_USER_ID = 'mock-id'
   public static createMockMessage (content: string) {
     let message: Message = sinon.createStubInstance(Message)

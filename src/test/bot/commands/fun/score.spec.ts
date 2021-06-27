@@ -23,6 +23,10 @@ describe('Score Command', function () {
     it('When a message contains bee!bottom and a user with extra whitespace at the end', async function () {
       await checkAndAssertMatches(`bee!bottom ${DiscordTestHelper.MOCK_USER_STRING}       `)
     })
+
+    it('When a message contains bee!bottom and a user that has no exclamation mark in their user id', async function () {
+      await checkAndAssertMatches(`bee!bottom ${DiscordTestHelper.MOCK_MOBILE_USER_STRING}       `)
+    })
   })
 
   describe('Should not trigger', function () {
