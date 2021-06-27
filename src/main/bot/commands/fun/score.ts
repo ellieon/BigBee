@@ -2,7 +2,7 @@ import * as DiscordClient from 'discord.js'
 import { BaseCommand, Command } from 'bot/commands/command'
 import { DatabaseHelper } from 'common/database'
 
-const COMMAND_STRING = /^bee!bottom\s?(<@!(?<userId>\d{17,19})>)?$/
+const COMMAND_STRING = /^bee!bottom\s?(<@!(?<userId>\d{17,19})>)?\s*$/
 
 @Command.register
 export class Score extends BaseCommand {
