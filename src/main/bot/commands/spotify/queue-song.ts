@@ -7,7 +7,7 @@ import * as logger from 'winston'
 
 const NAME = 'bee!queue [user] <song_name>'
 const DESCRIPTION = 'Searches for and adds it to a play queue'
-const COMMAND_STRING: RegExp = /^bee!queue(?:\s<@!(?<userId>\d{17,19})>?)?(?:\s(?<songName>.+))?$/
+const COMMAND_STRING: RegExp = /^bee!queue(?:\s<@!?(?<userId>\d{17,19})>?)?(?:\s(?<songName>.+))?$/
 
 @Command.register
 export class QueueSong extends BaseCommand {

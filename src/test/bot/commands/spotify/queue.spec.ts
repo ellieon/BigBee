@@ -63,6 +63,19 @@ describe('Queue Command', function () {
         sinon.assert.calledWith(message.channel.send, `Added the song \`A Song by An artist\` to <@!${MockSpotifyHelper.USER_1_ID}>\'s Beelist and queue`)
       })
 
+      it('should queue the song when the song is found and the command is sent from mobile', async function () {
+        const message = await checkAndAssertMatches(`bee!queue <@${MockSpotifyHelper.USER_1_ID}> song name`)
+        const spotifyApi = MockSpotifyHelper.spotify()
+        sinon.assert.calledOnce(spotifyApi.searchTracks)
+        sinon.assert.calledWith(spotifyApi.searchTracks, 'song name')
+        const request = MockSpotifyHelper.request()
+        sinon.assert.calledOnce(request.post)
+        assert.isTrue(request.post.firstCall.firstArg.url.includes(MockSpotifyHelper.trackDataFound.body.tracks.items[0].uri))
+        sinon.assert.calledOnce(spotifyApi.addTracksToPlaylist)
+        sinon.assert.calledWith(spotifyApi.addTracksToPlaylist, 'Beelist For User 1', ['a uri'])
+        sinon.assert.calledWith(message.channel.send, `Added the song \`A Song by An artist\` to <@!${MockSpotifyHelper.USER_1_ID}>\'s Beelist and queue`)
+      })
+
       it('should output an error when the song is not found', async function () {
         const message = await checkAndAssertMatches(`bee!queue <@!${MockSpotifyHelper.USER_1_ID}> invalid song name`)
         const spotifyApi = MockSpotifyHelper.spotify()
