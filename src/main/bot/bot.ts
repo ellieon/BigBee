@@ -86,8 +86,6 @@ export class BeeBot {
       return
     }
 
-    logger.info(message.content)
-
     this.registeredCommands.forEach((c) => {
       const matches = c.checkTrigger(message)
       if (matches) {
