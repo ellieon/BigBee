@@ -60,6 +60,12 @@ export class DatabaseHelper {
   private static readonly GET_BEE_ADMINS: string =
       `SELECT value from config where key = 'admins'`
 
+  private static readonly GET_BONK_LIST: string =
+      `SELECT value from config where key = 'bonk'`
+
+  private static readonly SET_BONK_LIST: string =
+      `UPDATE config SET value=$1 WHERE key = 'bonk'`
+
   private static instance: DatabaseHelper
 
   readonly pool = new Pool({
@@ -185,4 +191,19 @@ export class DatabaseHelper {
     logger.debug(`DatabaseHelper: Updating trigger array ${triggers}`)
     return this.pool.query(DatabaseHelper.SET_TRIGGERS, [triggers]).catch(logger.error)
   }
+
+  async getBonkReacts (): Promise<string[]> {
+    const res = (await this.pool.query(DatabaseHelper.GET_BONK_LIST).catch(logger.error))
+    if (res.rows.length > 0) {
+      return JSON.parse(res.rows[0].value)
+    } else {
+      return []
+    }
+  }
+
+  async pushBonkReacts (reacts: string): Promise<any> {
+    logger.debug(`DatabaseHelper: Updating trigger array`)
+    return this.pool.query(DatabaseHelper.SET_BONK_LIST, [reacts]).catch(logger.error)
+  }
+
 }
