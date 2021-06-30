@@ -14,7 +14,7 @@ export class Guess extends BaseCommand {
   }
 
   async execute (message: DiscordClient.Message): Promise<void> {
-    if (this.lastUser) {
+    if (this.lastUser && message.author.id === this.lastUser) {
       this.lastUser = undefined
       if (message.content.toLowerCase().match(GOOD_GUESS)) {
         await message.channel.send('🤯')
